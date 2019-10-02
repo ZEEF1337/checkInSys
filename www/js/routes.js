@@ -34,6 +34,16 @@ routes = [
     }
   },
   {
+    name: 'editprofile',
+    path: '/editprofile/',
+    componentUrl: './pages/editprofile.html',
+    on:{
+      pageInit: function (event, page){
+        app.methods.highlightli("naveditprofile");
+      }
+    }
+  },
+  {
     name: 'userlist',
     path: '/userlist/:groupID?/',
     componentUrl: './pages/userlist.html',
