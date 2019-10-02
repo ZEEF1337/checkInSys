@@ -35,8 +35,23 @@ routes = [
   },
   {
     name: 'userlist',
-    path: '/userlist/',
+    path: '/userlist/:groupID?/',
     componentUrl: './pages/userlist.html',
+    on:{
+      pageInit: function (event, page){
+        app.methods.highlightli("navuserlist");
+      }
+    },
+    data: function(){
+      return{
+        groupID: routeTo.params.groupID, // Der laves en ny Variabel som indeholder de parametre som der blev sendt med routet
+      }
+    }
+  },
+  {
+    name: 'usergrouplist',
+    path: '/usergrouplist/',
+    componentUrl: './pages/usergrouplist.html',
     on:{
       pageInit: function (event, page){
         app.methods.highlightli("navuserlist");

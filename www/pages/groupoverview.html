@@ -54,7 +54,7 @@
       },
       dataFetcher() {
         if (!this.loaded) app.preloader.show('blue');
-        app.request.json(`https://192.168.1.21/checkIn/endpoints/web/getAreas.php?userID=${app.data['userID']}`, result => {
+        app.request.json(`${app.data['serverIP']}endpoints/web/getAreas.php?userID=${app.data['userID']}`, result => {
           if (result.result == 1) {
             this.allUsers = result.records;
             this.fillHtml();

@@ -10,7 +10,7 @@
             </div>
 
             <div class="box" style="margin: 35px;">
-                <div class="boxtitle">Alle brugere</div>
+                <div class="boxtitle"></div>
                 <div class="bottombox testbox" style="overflow-y:auto;overflow-x:hidden;max-height:250px;">
                     <table id="userListTable">
                         <thead>
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+    var inspectedUserGroup;
     var deleteMode = false;
 
     inspectUser = (userID) => {
@@ -53,7 +54,6 @@
     }
 
     return {
-
         /**
          * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
          */
@@ -65,7 +65,7 @@
         // Framework7 Component Methods
         methods: {
             fillTable: function () {
-                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUser.php?userID=-1`, {}, function (response) {
+                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUsersPerGroup.php?groupID=${inspectedUserGroup}`, {}, function (response) {
                     if (response.result == 1) {
                         let innerHTML = "";
                         Object.keys(response.users).forEach((key, index) => {
@@ -86,6 +86,7 @@
                                 `;
                         });
                         $$('.userListBody').html(innerHTML);
+                        $$('.boxtitle').html(response.area+" - "+response.instructor)
                     } else {
                         $$('.userListBody').html(" ");
                     }
@@ -130,6 +131,7 @@
         on: {
             //pageMounted trigger når siden bliver insat i DOMen
             pageMounted: function (page) {
+                inspectedUserGroup = page.detail.route.params.groupID;
                 this.fillTable();
                 app.methods.searchFunction('searchPerName', 'userListTable', 0);
 
