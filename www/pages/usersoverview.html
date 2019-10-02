@@ -61,7 +61,7 @@
             },
             dataFetcher() {
                 if (!this.loaded) app.preloader.show('blue');
-                app.request.json(`https://192.168.1.21/checkIn/endpoints/web/getUsersPerGroup.php?groupID=${this.$route.params.groupID}`, result => {
+                app.request.json(`${app.data['serverIP']}endpoints/web/getUsersPerGroup.php?groupID=${this.$route.params.groupID}`, result => {
                     if (result.result == 1) {
                         this.allUsers = result.users;
                     } else {
