@@ -11,11 +11,11 @@ var app = new Framework7({
   // App root data
   data: function () {
     return {
-      username: "...",
+      username: "",
       userAvatar: "../images/default.png",
-      userID: 1,
+      userID: 0,
       userEmail: "",
-      accountType: "",
+      isAdmin: 0,
       loggedIn: false,
       serverIP: "https://192.168.1.21/checkIn/",
     };
@@ -64,19 +64,26 @@ var app = new Framework7({
             bkcolor = "#a82a2a";
         }
         let header = $$(headerclass);
+        let ogData = {
+          html: header.html(),
+          backgroundColor: header.css('background-color'),
+          color: header.css('color'),
+          borderColor: header.css('border-top-color')
+        }
         header.html(statusmsg);
         header.css({
             'color': 'white',
             'background-color': bkcolor
         });
+        
         $$(header).parent().css('border-top-color', bkcolor);
         setTimeout(function () {
-            header.html("Profile settings");
+            header.html(ogData.html);
             header.css({
-                'color': 'black',
-                'background-color': 'white'
+                'color': ogData.color,
+                'background-color': ogData.backgroundColor
             });
-            $$(header).parent().css('border-top-color', '#2894ee');
+            $$(header).parent().css('border-top-color', ogData.borderColor);
         }, 5000);
         return;
     },
@@ -133,13 +140,16 @@ var app = new Framework7({
 
         on: {
       pageInit: function (page) {
-        /*if(app.data['loggedIn'] == false){
+
+        //Login Form to show
+        if(app.data['loggedIn'] == false){
           document.getElementById('view-navbar').style.display = "none";
           app.views.main.router.navigate("/login/", {
             reloadCurrent: true, // Sikrer at der kommer friskt data på siden
           });
           return;
-        }*/
+        }
+
         // Dette er for at sikre os at den første side der bliver indlæst af systemet, er udlon siden
         let currentpage = app.views.main.router.currentPageEl.dataset.name;
         if (currentpage == "home") {

@@ -674,3 +674,24 @@ hr{
   padding: 12px 20px;
   float: right;
 }
+
+/*
+ * Login Screen styling
+ */
+.login-page .form {
+  background: #1c2529;
+  border-radius: 2px 8px 16px;
+}
+
+.login-page .form input {
+  background: #243035;
+  color: whitesmoke; 
+}
+
+.loginHeader {
+  margin-top: -25px;
+  margin-bottom: 15px;
+  background-color: #1c2529;
+  color: whitesmoke;
+  padding: 12px;
+}

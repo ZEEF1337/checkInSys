@@ -2,11 +2,13 @@
     <div class="page" data-name="login">
         <div class="login-page">
             <div class="form">
-                <div class="errorspot"><span class="fas fa-times aicon"></span><span class="errormsg"></span></div>
-                <form class="login-form" onsubmit="return false;">
-                    <input class="username" type="text" placeholder="Brugernavn" />
-                    <input class="password" type="password" placeholder="Adgangskode" />
-                    <button>LOGIN</button>
+                <div class="loginHeader">
+                    <span>Login</span>
+                </div>
+                <form class="login-form noSelect" onsubmit="return false;">
+                    <input class="username login_uname" type="text" placeholder="Email" />
+                    <input class="password login_password" type="password" placeholder="Adgangskode" />
+                    <button @click="login">LOGIN</button>
                 </form>
             </div>
         </div>
@@ -26,6 +28,34 @@
     
             // Framework7 Component Methods
             methods: {
+                login() {
+                    let email = $$('.login_uname').val();
+                    let password = $$('.login_password').val();
+                    
+                    app.request.post(`${app.data['serverIP']}endpoints/web/login.php`, {
+                        email: email,
+                        password: password
+                    }, function (response) {
+                        if (response.result == 0) {
+                            app.methods.statusMsg(response.message, "error", ".loginHeader");
+                            return;
+                        } else {
+                            app.methods.statusMsg(response.message, "success", ".loginHeader");
+                            setTimeout(function () { 
+                                app.data['userEmail'] = response.email;
+                                app.data['username'] = response.names;
+                                app.data['userID'] = response.userID;
+                                app.data['isAdmin'] = response.isAdmin;
+                                app.data['loggedIn'] = 1;
+                                app.methods.popNavbar();
+                                $$('#view-navbar').show();
+                                $$(`#navhome`).addClass('active');
+                                app.views.main.router.navigate("/currentDay/", { reloadCurrent: true, }) 
+                            }, 1000);
+                        }
+                    }, function (e, e2) { console.error(e); console.error(e2) }, "json");
+                },
+
     
             },
             on: {
@@ -37,3 +67,9 @@
     
     
     </script>
+
+    <style>
+        .page:not(#navbar) {
+            background: #35454c;
+        }
+    </style>
