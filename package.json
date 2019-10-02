@@ -1,10 +1,10 @@
 {
-  "name": "framework7-template-tabs",
+  "name": "skp-checkin-system",
   "version": "1.0.0",
-  "description": "Framework7 tabs starter app template",
+  "description": "CheckIn System for Techcollege (SKP)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/framework7io/framework7-template-tabs.git"
+    "url": "git+https://github.com/ZEEF1337/checkInSys.git"
   },
   "scripts": {
     "start": "npm run serve",
@@ -22,12 +22,12 @@
     "cordova",
     "phonegap"
   ],
-  "author": "Vladimir Kharlampidi",
+  "author": "Michael Toft",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/framework7io/framework7-template-tabs/issues"
+    "url": "https://github.com/ZEEF1337/checkInSys/issues"
   },
-  "homepage": "https://github.com/framework7io/framework7-template-tabs#readme",
+  "homepage": "https://github.com/ZEEF1337/checkInSys",
   "devDependencies": {
     "cpy-cli": "^1.0.1",
     "framework7": "^4.0.0",
