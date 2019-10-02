@@ -29,10 +29,10 @@ function generateRandomSalt($len) {
     }
 }
 
-function getSaltFromDB($user){
+function getSaltFromDB($email){
     $database = new Database();
     $db = $database->getConnection();
-    $query = "SELECT Salt FROM users WHERE Username = '$user'";
+    $query = "SELECT Salt FROM users WHERE Email = '$email'";
     $stmt = $db->prepare($query);
     try{
         $stmt->execute();
@@ -47,10 +47,10 @@ function getSaltFromDB($user){
     }
 }
 
-function getPassFromDB($user){
+function getPassFromDB($email){
     $database = new Database();
     $db = $database->getConnection();
-    $query = "SELECT Pass FROM users WHERE Username = '$user'";
+    $query = "SELECT Password FROM users WHERE Email = '$email'";
     $stmt = $db->prepare($query);
     try{
         $stmt->execute();
@@ -58,7 +58,7 @@ function getPassFromDB($user){
         if($num>0){
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             extract($row);
-            return $Pass;
+            return $Password;
         }
     } catch(PDOException $e){
         return($e);
@@ -101,10 +101,10 @@ function cardExists($cardID){
     }
 }
 
-function getUserIDFromName($user){
+function getUserIDFromEmail($email){
     $database = new Database();
     $db = $database->getConnection();
-    $query = "SELECT * FROM users WHERE Username = '$user'";
+    $query = "SELECT ID FROM users WHERE Email = '$email'";
     $stmt = $db->prepare($query);
     try{
         $stmt->execute();
@@ -156,31 +156,6 @@ function getEmailFromUserID($userID){
             extract($row);
             return $Email;
         }
-    } catch(PDOException $e){
-        return($e);
-    }
-}
-
-
-function getUserGroup($userID){
-    $database = new Database();
-    $db = $database->getConnection();
-    $query = "SELECT ugrp.Type FROM users INNER JOIN usergroups ugrp ON ugrp.ID = users.UserGroup WHERE users.ID = '$userID'";
-    $stmt = $db->prepare($query);
-    try{
-        $stmt->execute();
-        $num = $stmt->rowCount();
-        if($num>0){
-            $stmt->execute();
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            extract($row);
-            $out['result'] = 1;
-            $out['type'] = $Type;
-            return $out;
-        }else{
-            $out['result'] = 0;
-        }
-
     } catch(PDOException $e){
         return($e);
     }
@@ -275,6 +250,33 @@ function getUserGroupFromUserID($userID){
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         extract($row);
         return $userGroup;
+    } catch(PDOException $e){
+        return($e);
+    }
+}
+
+function verifyPass($email, $pass){
+    $salt = getSaltFromDB($email);
+    $dbPass = getPassFromDB($email);
+    $testPass = hash('sha512', hash('sha512', $salt).$pass);
+    if(strcmp($dbPass, $testPass) == 0){
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+function getNames($email){
+    $database = new Database();
+    $db = $database->getConnection();
+    $query = "SELECT Firstname, Lastname FROM users WHERE Email = '$email'";
+    $stmt = $db->prepare($query);
+    try{
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        extract($row);
+        $names = $Firstname." ".$Lastname;
+        return $names;
     } catch(PDOException $e){
         return($e);
     }
