@@ -151,7 +151,7 @@
                         return;
                     } else {
                         app.methods.statusMsg(response.message, "success", ".psettings");
-                        setTimeout(function () { app.views.main.router.navigate("/userlist/", { reloadCurrent: true, }) }, 3000);
+                        setTimeout(function () { app.views.main.router.navigate("/usergrouplist/", { reloadCurrent: true, }) }, 3000);
 
                     }
                 }, function (e, e2) { console.error(e); console.error(e2) }, "json");
