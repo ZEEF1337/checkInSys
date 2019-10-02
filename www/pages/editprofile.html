@@ -1,0 +1,185 @@
+<template>
+    <div class="page" data-name="editprofile">
+        <div class="grid">
+            <div class="editprofilebox box">
+                <div class="psettings boxtitle">Konto Informationer</div>
+                <div style="width: 90%;margin-left:5%;">
+                    <input class="ep_id" style="display:none;">
+                    <div class="inputfieldtitle">Fornavn</div>
+                    <input class="inputfield ep_fname" type="text" name="fname">
+
+                    <div class="inputfieldtitle">Efternavn</div>
+                    <input class="inputfield ep_lname" type="text" name="lname">
+
+                    <div class="inputfieldtitle">Email</div>
+                    <input class="inputfield ep_email" type="text" name="email">
+                </div>
+                <div class="btnbox" style="margin-top: 25px;">
+                    <div style="display: inline-block;">
+                        <a @click="updateUser" class="newbtnstyle noSelect">Opdater konto</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="editprofilebox box goright" style="height: 340px;">
+                <div class="upassword boxtitle">Opdater Adgangskode</div>
+                <div style="width: 90%;margin-left:5%;">
+
+                        <div class="inputfieldtitle">Nuværende adgangskode</div>
+                        <input class="inputfield ep_oldPass" type="password" id="ep_oldPass" name="ep_oldPass">
+
+                    <div class="inputfieldtitle">Ny adgangskode</div>
+                    <input class="inputfield ep_newPass" type="password" id="ep_newPass" name="newPass">
+
+                    <div class="inputfieldtitle">Bekræft adgangskode</div>
+                    <input class="inputfield ep_confPass" type="password" id="ep_confPass" name="confPass">
+                </div>
+                <div class="btnbox" style="margin-top:25px;">
+                    <div style="display: inline-block;">
+                        <a @click="updateUserPassword" class="newbtnstyle noSelect">Opdater adgangskode</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<script>
+    var inspectedUser;
+    return {
+
+        /**
+         * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+         */
+        data: function () {
+            return {
+            };
+        },
+
+        // Framework7 Component Methods
+        methods: {
+            fillAccountInformation: function () {
+                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUser.php?userID=${inspectedUser}`, {}, function (response) {
+                    if (response.result == 1) {
+                        $$('.ep_fname').val(`${response.users[0].firstName}`);
+                        $$('.ep_lname').val(`${response.users[0].lastName}`);
+                        $$('.ep_email').val(`${response.users[0].email}`);
+                        $$('.ep_card').val(`${response.users[0].cardID}`);
+                        $$('.areaDropDown').val(response.users[0].areaID)
+                        $$('.ep_id').val(response.users[0].ID);
+                        if(response.users[0].isAdmin == 1){
+                            $$('.ep_isAdmin').prop('checked', true);
+                        }
+                        if(response.users[0].isInstructor == 1){
+                            $$('.ep_isInstructor').prop('checked', true);
+                        }
+
+                    }
+                }, function (e, e2) { console.error(e); console.error(e2) });
+            },
+            fillAreaDropDown: function () {
+                that = this;
+                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getAreas.php?userID=${app.data['userID']}`, {}, function (response) {
+                    if (response.result == 1) {
+                        let innerHTML = "";
+                        Object.keys(response.records).forEach((key, index) => {
+                            let value = response.records[key];
+                            innerHTML +=
+                                `
+                                <option value="${value.ID}">${value.Area} - ${value.Instructor}</option>
+                                `;
+                        });
+                        $$('.areaDropDown').html(innerHTML);
+                        that.fillAccountInformation();
+                    }
+                }, function (e, e2) { console.error(e); console.error(e2) });
+            },
+            updateUser: function () {
+                let ID = $$('.ep_id').val();
+                let firstName = $$('.ep_fname').val();
+                let lastName = $$('.ep_lname').val();
+                let email = $$('.ep_email').val();
+                let userGroup = $$('.areaDropDown').val();
+                let cardID = $$('.ep_card').val();
+                let isAdmin = 0;
+                let isInstructor = 0;
+                if ($$('.ep_isAdmin').prop('checked') == true) {
+                    isAdmin = 1;
+                }
+                if ($$('.ep_isInstructor').prop('checked') == true) {
+                    isInstructor = 1;
+                }
+                if (firstName == "" || lastName == "" || email == "" || userGroup == "" || cardID == "") {
+                    app.methods.statusMsg("Alle felter skal være udfyldt", "error", ".psettings");
+                    return;
+                }
+                if (ID == "") {
+                    app.methods.statusMsg("Noget gik galt", "error", ".psettings");
+                    return;
+                }
+
+                app.request.post(`${app.data['serverIP']}endpoints/web/postUpdateUser.php`, {
+                    userID: ID,
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName,
+                    userGroup: userGroup,
+                    cardID: cardID,
+                    isAdmin: isAdmin,
+                    isInstructor: isInstructor,
+                }, function (response) {
+                    if (response.result == 0) {
+                        app.methods.statusMsg(response.message, "error", ".psettings");
+                        return;
+                    } else {
+                        app.methods.statusMsg(response.message, "success", ".psettings");
+                        setTimeout(function () { app.views.main.router.navigate("/usergrouplist/", { reloadCurrent: true, }) }, 3000);
+
+                    }
+                }, function (e, e2) { console.error(e); console.error(e2) }, "json");
+            },
+            updateUserPassword: function () {
+                let ID = $$('.ep_id').val();
+                let password = $$('.ep_newPass').val();
+                let confPassword = $$('.ep_confPass').val();
+
+                if (password == "" || confPassword == "") {
+                    app.methods.statusMsg("Alle felter skal være udfyldt", "error", ".upassword");
+                    return;
+                }
+                if (password != confPassword) {
+                    app.methods.statusMsg("Adgangskoderne skal matche", "error", ".upassword");
+                    return;
+                }
+                if (ID == "") {
+                    app.methods.statusMsg("Noget gik galt", "error", ".upassword");
+                    return;
+                }
+
+                app.request.post(`${app.data['serverIP']}endpoints/web/postUpdateUserPassword.php`, {
+                    userID: ID,
+                    password: password,
+                }, function (response) {
+                    if (response.result == 0) {
+                        app.methods.statusMsg(response.message, "error", ".upassword");
+                        return;
+                    } else {
+                        app.methods.statusMsg(response.message, "success", ".upassword");
+                        setTimeout(function () { app.views.main.router.navigate("/userlist/", { reloadCurrent: true, }) }, 3000);
+
+                    }
+                }, function (e, e2) { console.error(e); console.error(e2) }, "json");
+            },
+        },
+        on: {
+            //pageMounted trigger når siden bliver insat i DOMen
+            pageMounted: function (page) {
+                inspectedUser = page.detail.route.params.userID;
+                this.fillAreaDropDown();
+            },
+        },
+    }
+
+
+</script>
