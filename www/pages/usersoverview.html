@@ -1,6 +1,19 @@
 <template>
     <div class="page" data-name="usersoverview">
-            <div class="boxgrid" id="gridTable">
+        <div id="navTit">
+            <div class="row">
+                <div class="col-33">
+                    <a href="/groupoverview/"><span class="fas fa-chevron-left aicon"></span>Tilbage til oversigten</a>
+                </div>
+                <div class="col-33">
+                    <span class="instructorBox"></span>
+                </div>
+                <div class="col-33">
+                    <span class="weekBox"></span>
+                </div>
+            </div>
+        </div>
+        <div class="boxgrid" id="gridTable">
         </div>
     </div>
 </template>
@@ -25,7 +38,6 @@
                 refreshTimer = setInterval(() => {
                     this.dataFetcher();
                 }, 20000)
-
             },
             fillHtml(array) {
                 var gridDat = '';
@@ -44,25 +56,27 @@
                         </div>`
                 });
                 $$('#gridTable').html(gridDat);
-                $$('#navTit').html(`Din Instruktør: ${this.restData.instructor} - Lokale: ${this.restData.area} - Uge: ${this.restData.week}`)
+                $$('.instructorBox').html(`Lokale: ${this.restData.area} - Instruktør: ${this.restData.instructor}`);
+                $$('.weekBox').html(`Uge: ${this.restData.week}`);
             },
             dataFetcher() {
                 if (!this.loaded) app.preloader.show('blue');
                 app.request.json(`https://192.168.1.21/checkIn/endpoints/web/getUsersPerGroup.php?groupID=${this.$route.params.groupID}`, result => {
                     if (result.result == 1) {
                         this.allUsers = result.users;
-                        this.restData = {
-                            instructor: result.instructor,
-                            area: result.area,
-                            group: result.group,
-                            week: result.week,
-                            year: result.year
-                        }
-                        this.fillHtml();
-                        if (!this.loaded) this.loaded = !this.loaded;
-                        app.preloader.hide();
+                    } else {
+                        this.allUsers = {};
                     }
-
+                    this.restData = {
+                        instructor: result.instructor,
+                        area: result.area,
+                        group: result.group,
+                        week: result.week,
+                        year: result.year
+                    }
+                    this.fillHtml();
+                    if (!this.loaded) this.loaded = !this.loaded;
+                    app.preloader.hide();
                 }, (error) => {
                     if (this.loaded) this.loaded = !this.loaded;
                     app.preloader.show('blue')
@@ -72,9 +86,11 @@
         on: {
             pageMounted: function (page) {
                 this.init();
+                $$('#navbar').hide();
             },
             pageAfterOut() {
                 clearInterval(refreshTimer);
+                $$('#navbar').show();
             }
         }
     }

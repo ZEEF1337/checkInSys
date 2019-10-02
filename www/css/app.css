@@ -638,3 +638,39 @@ hr{
 .photothumb {
   width: 100%;
 }
+
+/*
+ * Start på styling til usersoverview siden
+ */
+
+#navTit{
+  background-color: #243035; 
+  width: 100%;
+  margin-bottom: 35px;
+}
+
+#navTit a {
+  float:left;
+  text-decoration: none;
+  color: whitesmoke;
+  padding: 12px 20px;
+}
+
+#navTit a:hover:not(.active) {
+  background-color: #1c2529;
+  border-left-style: solid;
+  border-width: 2px;
+  border-color: #1d89e4;
+}
+
+#navTit .instructorBox {
+  color: whitesmoke;
+  padding: 12px 20px;
+  display: inline-block;
+}
+
+#navTit .weekBox {
+  color: whitesmoke;
+  padding: 12px 20px;
+  float: right;
+}
