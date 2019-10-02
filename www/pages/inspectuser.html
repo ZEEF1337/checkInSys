@@ -4,6 +4,7 @@
             <div class="editprofilebox box">
                 <div class="psettings boxtitle">Konto Informationer</div>
                 <div style="width: 90%;margin-left:5%;">
+                    <input class="iu_id" style="display:none;">
                     <div class="inputfieldtitle">Fornavn</div>
                     <input class="inputfield iu_fname" type="text" name="fname">
 
@@ -35,7 +36,7 @@
                 </div>
                 <div class="btnbox" style="margin-top:-37px;">
                     <div style="display: inline-block;">
-                        <a class="newbtnstyle noSelect">Opdater konto</a>
+                        <a @click="updateUser" class="newbtnstyle noSelect">Opdater konto</a>
                     </div>
                 </div>
             </div>
@@ -45,14 +46,14 @@
                 <div style="width: 90%;margin-left:5%;">
 
                     <div class="inputfieldtitle">Ny adgangskode</div>
-                    <input class="inputfield" type="password" id="ep_newPass" name="newPass">
+                    <input class="inputfield ep_newPass" type="password" id="ep_newPass" name="newPass">
 
                     <div class="inputfieldtitle">Bekræft adgangskode</div>
-                    <input class="inputfield" type="password" id="ep_confPass" name="confPass">
+                    <input class="inputfield ep_confPass" type="password" id="ep_confPass" name="confPass">
                 </div>
                 <div class="btnbox" style="margin-top:25px;">
                     <div style="display: inline-block;">
-                        <a class="newbtnstyle noSelect">Opdater adgangskode</a>
+                        <a @click="updateUserPassword" class="newbtnstyle noSelect">Opdater adgangskode</a>
                     </div>
                 </div>
             </div>
@@ -78,12 +79,12 @@
             fillAccountInformation: function () {
                 app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUser.php?userID=${inspectedUser}`, {}, function (response) {
                     if (response.result == 1) {
-                        console.dir(response.users[0])
                         $$('.iu_fname').val(`${response.users[0].firstName}`);
                         $$('.iu_lname').val(`${response.users[0].lastName}`);
                         $$('.iu_email').val(`${response.users[0].email}`);
                         $$('.iu_card').val(`${response.users[0].cardID}`);
                         $$('.areaDropDown').val(response.users[0].areaID)
+                        $$('.iu_id').val(response.users[0].ID);
                         if(response.users[0].isAdmin == 1){
                             $$('.iu_isAdmin').prop('checked', true);
                         }
@@ -112,6 +113,7 @@
                 }, function (e, e2) { console.error(e); console.error(e2) });
             },
             updateUser: function () {
+                let ID = $$('.iu_id').val();
                 let firstName = $$('.iu_fname').val();
                 let lastName = $$('.iu_lname').val();
                 let email = $$('.iu_email').val();
@@ -119,7 +121,6 @@
                 let cardID = $$('.iu_card').val();
                 let isAdmin = 0;
                 let isInstructor = 0;
-                let that = this;
                 if ($$('.iu_isAdmin').prop('checked') == true) {
                     isAdmin = 1;
                 }
@@ -127,11 +128,16 @@
                     isInstructor = 1;
                 }
                 if (firstName == "" || lastName == "" || email == "" || userGroup == "" || cardID == "") {
-                    app.methods.statusMsg("Alle felter skal være udfyldt", "error", ".opretBruger");
+                    app.methods.statusMsg("Alle felter skal være udfyldt", "error", ".psettings");
+                    return;
+                }
+                if (ID == "") {
+                    app.methods.statusMsg("Noget gik galt", "error", ".psettings");
                     return;
                 }
 
-                app.request.post(`${app.data['serverIP']}endpoints/web/postCreateUser.php`, {
+                app.request.post(`${app.data['serverIP']}endpoints/web/postUpdateUser.php`, {
+                    userID: ID,
                     email: email,
                     firstName: firstName,
                     lastName: lastName,
@@ -141,11 +147,43 @@
                     isInstructor: isInstructor,
                 }, function (response) {
                     if (response.result == 0) {
-                        app.methods.statusMsg(response.message, "error", ".opretBruger");
+                        app.methods.statusMsg(response.message, "error", ".psettings");
                         return;
                     } else {
-                        app.methods.statusMsg(response.message, "success", ".opretBruger");
-                        setTimeout(function () { app.views.main.router.navigate("/createuser/", { reloadCurrent: true, }) }, 3000);
+                        app.methods.statusMsg(response.message, "success", ".psettings");
+                        setTimeout(function () { app.views.main.router.navigate("/userlist/", { reloadCurrent: true, }) }, 3000);
+
+                    }
+                }, function (e, e2) { console.error(e); console.error(e2) }, "json");
+            },
+            updateUserPassword: function () {
+                let ID = $$('.iu_id').val();
+                let password = $$('.ep_newPass').val();
+                let confPassword = $$('.ep_confPass').val();
+
+                if (password == "" || confPassword == "") {
+                    app.methods.statusMsg("Alle felter skal være udfyldt", "error", ".upassword");
+                    return;
+                }
+                if (password != confPassword) {
+                    app.methods.statusMsg("Adgangskoderne skal matche", "error", ".upassword");
+                    return;
+                }
+                if (ID == "") {
+                    app.methods.statusMsg("Noget gik galt", "error", ".upassword");
+                    return;
+                }
+
+                app.request.post(`${app.data['serverIP']}endpoints/web/postUpdateUserPassword.php`, {
+                    userID: ID,
+                    password: password,
+                }, function (response) {
+                    if (response.result == 0) {
+                        app.methods.statusMsg(response.message, "error", ".upassword");
+                        return;
+                    } else {
+                        app.methods.statusMsg(response.message, "success", ".upassword");
+                        setTimeout(function () { app.views.main.router.navigate("/userlist/", { reloadCurrent: true, }) }, 3000);
 
                     }
                 }, function (e, e2) { console.error(e); console.error(e2) }, "json");
