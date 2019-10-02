@@ -27,7 +27,7 @@ $currWeek = $date->format('W');
 $year = $date->format('Y');
 $weekday = $date->format('l');
 
-$query = "SELECT u.Firstname, u.Lastname, tt.*, ug.* FROM users as u";
+$query = "SELECT u.Firstname, u.Lastname, u.isInstructor, u.Email, u.CardID, u.ID as userID, tt.*, ug.* FROM users as u";
 $query .= " LEFT JOIN timetable as tt ON tt.UserID = u.ID INNER JOIN usergroups as ug ON ug.ID = u.Usergroup";
 $query .= " WHERE NOT EXISTS (SELECT * FROM timetable WHERE u.ID = timetable.UserID && timetable.Week = '$currWeek')";
 $query .= " && u.Usergroup = '$groupID' || tt.Week = '$currWeek' && tt.Year = '$year' &&u.Usergroup = '$groupID' ORDER BY TRIM(u.Firstname) ASC, TRIM(u.Lastname) ASC;";
@@ -45,13 +45,21 @@ try{
                 $temp = array(
                     "firstName" => $Firstname,
                     "lastName" => $Lastname,
+                    "email" => $Email,
+                    "cardID" => $CardID,
+                    "ID" => $userID,
                     "checkTime" => json_decode($row[$weekday]),
+                    "isInstructor" => (INT)$isInstructor,
                 );
             }else{
                 $temp = array(
                     "firstName" => $Firstname,
                     "lastName" => $Lastname,
+                    "email" => $Email,
+                    "cardID" => $CardID,
+                    "ID" => $userID,
                     "checkTime" => NULL,
+                    "isInstructor" => (INT)$isInstructor,
                 );
             }
             array_push($out["users"], $temp);
@@ -62,6 +70,15 @@ try{
             $out['result'] = 1;
         }
     }else{
+        $query2 = "SELECT * FROM usergroups WHERE ID = $groupID;";
+        $stmt2 = $db->prepare($query2);
+        $stmt2->execute();
+        $row = $stmt2->fetch(PDO::FETCH_ASSOC);
+        extract($row);
+        $out['instructor'] = $Instructor;
+        $out['area'] = $Area;
+        $out['week'] = $currWeek;
+        $out['year'] = $year;
         $out['result'] = 0;
         
     }
