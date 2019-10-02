@@ -46,10 +46,10 @@
                 <div style="width: 90%;margin-left:5%;">
 
                     <div class="inputfieldtitle">Ny adgangskode</div>
-                    <input class="inputfield ep_newPass" type="password" id="ep_newPass" name="newPass">
+                    <input class="inputfield iu_newPass" type="password" id="iu_newPass" name="newPass">
 
                     <div class="inputfieldtitle">Bekræft adgangskode</div>
-                    <input class="inputfield ep_confPass" type="password" id="ep_confPass" name="confPass">
+                    <input class="inputfield iu_confPass" type="password" id="iu_confPass" name="confPass">
                 </div>
                 <div class="btnbox" style="margin-top:25px;">
                     <div style="display: inline-block;">
@@ -158,8 +158,8 @@
             },
             updateUserPassword: function () {
                 let ID = $$('.iu_id').val();
-                let password = $$('.ep_newPass').val();
-                let confPassword = $$('.ep_confPass').val();
+                let password = $$('.iu_newPass').val();
+                let confPassword = $$('.iu_confPass').val();
 
                 if (password == "" || confPassword == "") {
                     app.methods.statusMsg("Alle felter skal være udfyldt", "error", ".upassword");
