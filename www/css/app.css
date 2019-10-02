@@ -1,0 +1,640 @@
+html, body, #app{
+  width: 100%; 
+  height:100%; 
+  overflow:hidden; 
+}
+.ios .tabbar-labels .tab-link:not(.tab-link-active) .icon-ios-fill {
+  display: none;
+}
+.ios .tabbar-labels .tab-link.tab-link-active .icon:not(.icon-ios-fill) {
+  display: none;
+}
+
+#view-home{
+  left:0px;
+  right:0px;
+  bottom: 0px;
+  position: absolute;
+}
+
+.page:not(#navbar) {
+  padding: 35px;
+  background-color: #ecf0f5;
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+#navbar{
+  Width: 250px;
+  background-color: #243035;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+li {
+  float: left;
+  width: 100%;
+}
+
+li a {
+  display: block;
+  color: whitesmoke;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+li a.active {
+  background-color: #304147;
+  border-left-style: solid;
+  border-width: 1px;
+  border-color: #1d89e4;
+}
+
+li a:hover:not(.active) {
+  background-color: #1c2529;
+  border-left-style: solid;
+  border-width: 1px;
+  border-color: #1d89e4;
+}
+
+.navlogo{
+  background-color: #2894ee;
+}
+
+.centerlogo{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.aicon{
+  margin-right: 8px;
+  width: 15px;
+  height: 15px;
+}
+
+.profilearea{
+  margin: 8px;
+}
+
+.profilearea img {
+  border-radius: 50%;
+  width: 50px;
+  vertical-align: middle;
+}
+
+.usernamefield{
+  color: whitesmoke;
+  margin-left: 8px;
+}
+
+.login-page {
+  width: 360px;
+  padding: 8% 0 0;
+  margin: auto;
+}
+
+.form {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.form input {
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.form button {
+  outline: 0;
+  background: #2894ee;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.form button:hover,.form button:active,.form button:focus {
+  background: #1d89e4;
+}
+
+.form .message {
+  margin: 15px 0 0;
+  color: #b3b3b3;
+  font-size: 12px;
+  display: inline-block
+}
+
+.form .message a {
+  color: #2894ee;
+  text-decoration: none;
+}
+
+.errorspot{
+  margin-top: -25px;
+  margin-bottom: 15px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  background-color: #bf4f45;
+  color: whitesmoke;
+  display: none;
+
+}
+
+.box{
+  background-color: white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgray;
+  border-top-color: #2894ee;
+  border-top-width: 4px;
+}
+
+.topbox{
+  height: auto;
+  width: 100%;
+  margin-bottom: 35px;
+  text-align: center;
+}
+
+.middlebox{
+  height: 160px;
+  width: 100%;
+  margin-bottom: 35px;
+  display: inline-block;
+}
+
+.bottombox{
+  flex-grow : 1;
+}
+
+.boxtitle{
+  text-align: center;
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: black;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 5px 0 5px 0;
+}
+
+.overviewpic{
+  border-radius: 50%;
+  width:100px;
+  height:100px;
+  margin-left:15px;
+  float: left;
+  margin-top: 12px;
+}
+
+.overviewtext{
+  margin-left: 15px;
+}
+
+.infowrapper{
+  width: 90%;
+  height: 125px;
+}
+.textfloatright{
+  float: right;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 35px;
+}
+
+.goright{
+  margin-left: auto;
+}
+
+.hardwaretext{
+  margin-left: -100px;
+}
+
+.hardwareinfowrapper{
+  text-align: center;
+}
+
+.trackergrid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 15px;
+}
+
+.trackerbox{
+  border-style: solid;
+  border-width: 1px;
+  border-color: #1c2529;
+  height: 120px;
+  border-radius: 1%;
+}
+
+.trackerbox:hover{
+  border-color: #2894ee;
+  cursor: pointer;
+}
+
+.trackerpics{
+  width:75px;
+  height:75px;
+  margin-left:15px;
+  float: left;
+  margin-top: 25px;
+}
+
+.trackercount{
+  float:left;
+  margin-left: 25px;
+  font-weight: bold;
+  font-size: 48px;
+  color:white;
+}
+
+.trackertitle{
+  float:left;
+  margin-top: 60px;
+  margin-left: -25px;
+  color:white;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.dashtable td, .dashtable th {
+  width: 43%;
+}
+
+tr:nth-child(even) {
+  background-color: #81c0f3;
+}
+
+.dashtable tr td:first-child, .dashtable tr th:first-child { 
+  width:14%;
+}
+
+.HardwareInfoArea{
+  margin: 16px;
+}
+
+.noSelect{
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */
+}
+
+.resetbtn{
+  text-decoration: none;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  background-color: #2894ee;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.resetbtn:hover, .newbtnstyle:hover, .newbtnstylesmall:hover, .choosefilebtn:hover{
+  background-color: #217ac4;
+}
+
+.HWID{
+  text-align: center;
+}
+
+.trackersubpics{
+  width:25px;
+  height:25px;
+  margin-left: auto;
+}
+
+.trackersubbox{
+  color: white;
+  margin-top: 2px;
+  margin-right: 35px;
+}
+
+.trackersubtext{
+  margin-right:5px;
+}
+
+.editprofilebox{
+  width: 100%;
+  display: inline-block;
+}
+
+hr{
+  width: 90%;
+  color: #2894ee;
+  border-bottom: none;
+}
+
+.editprofilepic{
+  width:75px;
+  height:75px;
+  margin-left:15px;
+  float: left;
+  margin-top: 15px;
+}
+
+.ep_picsubtext{
+  color: darkgray;
+  font-size: 10px;
+  width: 75px;
+  text-align: center;
+}
+
+.selectedfile{
+  display: inline-block;
+  margin-left: 5px;
+  color: #707070;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 60%;
+}
+
+.choosefilebtn{
+  float: right;
+  border-color: #b3b3b3;
+  border-width: 1px;
+  border-style: solid;
+  padding: 0 5px 0 5px;
+  background-color: #2894ee;
+  border-radius: 3px;
+  color: #707070;
+  width: 100px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  margin-top: -3px;
+  cursor: pointer;
+}
+
+.choosefilebtn label {
+  text-decoration: none;
+  cursor: pointer;
+  color: #FFFFFF;
+  display: block;
+  margin-left: -5px;
+  width: 110px;
+}
+
+.ep_selectwrapper{
+  border-color: lightgray;
+  border-width: 1px;
+  border-style: solid;
+  padding: 8px 5px 8px 5px;
+  border-radius: 3px;
+  background-color: #fafafa;
+  font-weight: initial;
+  height: 21px;
+}
+
+.ep_previewpic{
+  width: 75px;
+  height: 75px;
+  margin-top: 15px;
+}
+
+.textarea{
+  border-style: solid !important;
+  border-width: 1px !important;
+  border-color: #b3b3b3 !important;
+  border-radius: 3px !important;
+  width: 100% !important;
+  height: 150px !important;
+  line-height: 35px !important;
+  padding: 0px 8px 0px 8px !important;
+  background-color: #fafafa !important;
+  resize: none;
+}
+
+.inputfield{
+  border-style: solid !important;
+  border-width: 1px !important;
+  border-color: #b3b3b3 !important;
+  border-radius: 3px !important;
+  width: 100% !important;
+  height: 35px !important;
+  line-height: 35px !important;
+  padding: 0px 8px 0px 8px !important;
+  background-color: #fafafa !important;
+}
+
+.inputfieldtitle{
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.newbtnstyle{
+  text-decoration: none;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  background-color: #2894ee;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  height: 35px;
+  line-height: 35px;
+  width: 170px;
+  display: block;
+}
+
+.btnbox{
+  width: 90%;
+  margin-left:5%;
+  margin-top: 43px;
+  text-align: right;
+  margin-bottom: 35px;
+}
+
+.uploadbtnbox{
+  text-align: right;
+}
+
+.newbtnstylesmall{
+  text-decoration: none;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  background-color: #2894ee;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  height: 25px;
+  line-height: 25px;
+  width: 115px;
+  display: block;
+}
+
+.h_descwrap{
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 95%;
+}
+
+.vhr_title{
+  text-align: center;
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: black;
+  font-weight: bold;
+  padding: 5px 0 5px 0;
+}
+
+.vhr_box{
+  background-color: white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgray;
+}
+
+.vhrUserPic {
+  border-radius: 50%;
+  width: 120px;
+  vertical-align: middle;
+  margin-top: 20%;
+}
+
+.divider{
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: lightgray;
+  margin: 4px 0 4px 0;
+  height: 0;
+}
+
+.projectDetailsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 5px;
+}
+
+.bugReportGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 5px;
+}
+
+.notFilled {
+  border-style: solid !important;
+  border-width: 1px !important;
+  border-color: red !important;
+}
+
+.circle{
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  float: right;
+  margin-top: 5%;
+}
+
+
+
+
+
+
+/* BOXES */
+
+.boxgrid {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+}
+
+.roomgrid.room {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.item {
+  background-color: #243035;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+.item:hover {
+  background-color: #334147;
+}
+
+.itemtitle {
+  padding: 5px 10px;
+  text-align: center;
+}
+
+.itemtitle h3 {
+  font-size: 0.9em;
+  color: whitesmoke;
+  text-transform: uppercase;
+}
+
+.itemtitle h3 sub {
+  font-size: 11px;
+}
+
+.nomeet .itemtitle {
+  background-color: #a82a2a;
+}
+
+.meet .itemtitle {
+  background-color: #35a82a;
+}
+
+.home .itemtitle {
+  background-color: #2894ee;
+}
+
+.desc {
+  padding: 5px 10px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.desc p {
+  color: whitesmoke;
+}
+
+.photothumb {
+  width: 100%;
+}

@@ -1,0 +1,39 @@
+<template>
+    <div class="page" data-name="login">
+        <div class="login-page">
+            <div class="form">
+                <div class="errorspot"><span class="fas fa-times aicon"></span><span class="errormsg"></span></div>
+                <form class="login-form" onsubmit="return false;">
+                    <input class="username" type="text" placeholder="Brugernavn" />
+                    <input class="password" type="password" placeholder="Adgangskode" />
+                    <button>LOGIN</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+        return {
+    
+            /**
+             * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+             */
+            data: function () {
+                return {
+                };
+            },
+    
+            // Framework7 Component Methods
+            methods: {
+    
+            },
+            on: {
+                //pageMounted trigger når siden bliver insat i DOMen
+                pageMounted: function (page) {
+                },
+            },
+        }
+    
+    
+    </script>

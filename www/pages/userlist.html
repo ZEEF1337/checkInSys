@@ -1,0 +1,169 @@
+<template>
+    <div class="page" data-name="userlist">
+        <div class="bottombox box">
+
+            <div style="margin-left:35px;margin-top:35px;width: 25%">
+                <span style="position:absolute;margin-left:5px;margin-top:7px;"><i
+                        class="fas fa-search icon-format"></i></span>
+                <input id="searchPerName" style="padding-left: 25px !important;" class="inputfield" type="text"
+                    placeholder="Søg per navn..">
+            </div>
+
+            <div class="box" style="margin: 35px;">
+                <div class="boxtitle">Alle brugere</div>
+                <div class="bottombox testbox" style="overflow-y:auto;overflow-x:hidden;max-height:250px;">
+                    <table id="userListTable">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;width:25%;">Navn</th>
+                                <th style="text-align: center;width:20%;">Email</th>
+                                <th style="text-align: center;width:15%;">Kort</th>
+                                <th class="thEdit" style="width:5%;"></th>
+                                <th class="thDelete" style="text-align:center;width:5%;display:none;">Slet</th>
+                            </tr>
+                        </thead>
+                        <tbody class="userListBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="btnbox" style="margin:0;width:auto;margin-right:35px;">
+                <div style="display:inline-block;display:none;" class="disableDeleteModeBtn">
+                    <a @click="disableDeleteMode" class="newbtnstyle noSelect">Annuller</a>
+                </div>
+                <div style="display:inline-block;display:none;" class="deleteSelectedBtn">
+                    <a @click="deleteUsers" style="background-color:#a82a2a;" class="newbtnstyle noSelect">Slet
+                        valgte</a>
+                </div>
+                <div style="display: inline-block;" class="enableDeleteModeBtn">
+                    <a @click="enableDeleteMode" style="background-color:#a82a2a;" class="newbtnstyle noSelect">Slet
+                        brugere</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    var deleteMode = false;
+
+    inspectUser = (userID) => {
+        app.views.main.router.navigate(`/inspectuser/${userID}/`, { reloadCurrent: true, });
+    }
+
+    return {
+
+        /**
+         * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+         */
+        data: function () {
+            return {
+            };
+        },
+
+        // Framework7 Component Methods
+        methods: {
+            fillTable: function () {
+                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUser.php?userID=-1`, {}, function (response) {
+                    if (response.result == 1) {
+                        let innerHTML = "";
+                        Object.keys(response.users).forEach((key, index) => {
+                            let value = response.users[key];
+                            innerHTML +=
+                                `
+                                <tr class="trs">
+                                <td class="tds" style="text-align:center;">${value.firstName} ${value.lastName} </td>
+                                <td class="tds" style="text-align:center;">${value.email}</td>
+                                <td class="tds" style="text-align:center;">${value.cardID}</td>
+                                <td class="tdEdit" style="text-align:center;">
+                                    <a onclick="inspectUser(${value.ID})" style="width: 75px;display:inline-block;" class="noSelect newbtnstylesmall">Rediger</a>
+                                </td>
+                                <td class="tdDelete" style="text-align:center;display:none;">
+                                    <input type="checkbox" value="${value.ID}" style="height:20px;width:20px;vertical-align: middle;">
+                                </td>
+                            </tr>
+                                `;
+                        });
+                        $$('.userListBody').html(innerHTML);
+                    } else {
+                        $$('.userListBody').html(" ");
+                    }
+                });
+            },
+            enableDeleteMode: function () {
+                deleteMode = true;
+                $$('.disableDeleteModeBtn').css('display', 'inline-block');
+                $$('.deleteSelectedBtn').css('display', 'inline-block');
+                $$('.enableDeleteModeBtn').css('display', 'none');
+                $$('.thEdit').css('display', 'none');
+                $$('.thDelete').css('display', 'table-cell');
+                $$('.tdEdit').css('display', 'none');
+                $$('.tdDelete').css('display', 'table-cell');
+            },
+            disableDeleteMode: function () {
+                deleteMode = false;
+                $$('.disableDeleteModeBtn').css('display', 'none');
+                $$('.deleteSelectedBtn').css('display', 'none');
+                $$('.enableDeleteModeBtn').css('display', 'inline-block');
+                $$('.thEdit').css('display', 'table-cell');
+                $$('.thDelete').css('display', 'none');
+                $$('.tdEdit').css('display', 'table-cell');
+                $$('.tdDelete').css('display', 'none');
+                $$('.trs').css('background-color', '');
+                $$('.tds').css('color', '#000000');
+                $$('.tdDelete').find('input[type="checkbox"]').prop('checked', false);
+            },
+            deleteUsers: () => {
+                var checkBoxObj = $$('#userListTable').find('input[type="checkbox"]');
+                app.dialog.confirm('Er du sikker på at du vil slette denne/disse bruger(e) fra databasen?', 'Slet Bruger', function () {
+                    checkBoxObj.forEach(element => {
+                        if (element.checked) {
+                            element.parentElement.parentElement.remove();
+                            app.request.getJSON(`${app.data['serverIP']}endpoints/web/deleteUser.php?userID=${element.value}`, (data) => {}, function (e, e2) { });
+                        }
+                    });
+                })
+            },
+
+        },
+        on: {
+            //pageMounted trigger når siden bliver insat i DOMen
+            pageMounted: function (page) {
+                this.fillTable();
+                app.methods.searchFunction('searchPerName', 'userListTable', 0);
+
+                setTimeout(function () {
+                    let topOffset = $$('.testbox')[0].offsetTop;
+                    let pageHeight = window.innerHeight;
+                    let rest = pageHeight - topOffset - 214;
+                    $$('.testbox').css('max-height', `${rest}px`);
+                }, 200);
+
+                $$('.userListBody').on('click', (e) => {
+                    if (!deleteMode) {
+                        if(e.target.tagName == "A"){
+                            return;
+                        }else{
+                            let inspectedUser = $$(e.target.parentElement).find('input[type="checkbox"]').val();
+                            app.views.main.router.navigate(`/inspectusertime/${inspectedUser}/`, { reloadCurrent: true, });
+                        }
+                    }else{
+                        let isChecked = $$(e.target.parentElement).find('input[type="checkbox"]').prop('checked');
+                        if (!isChecked) {
+                            $$(e.target.parentElement).find('input[type="checkbox"]').prop('checked', true);
+                            $$(e.target.parentElement).css('background-color', '#a82a2a');
+                            $$(e.target.parentElement).css('color', '#FFFFFF');
+                        } else {
+                            $$(e.target.parentElement).find('input[type="checkbox"]').prop('checked', false);
+                            $$(e.target.parentElement).css('background-color', '');
+                            $$(e.target.parentElement).css('color', '#000000');
+                        }
+                    }
+                });
+            },
+        },
+    }
+
+
+</script>

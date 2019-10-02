@@ -1,0 +1,81 @@
+<template>
+    <div class="page" data-name="usersoverview">
+            <div class="boxgrid" id="gridTable">
+        </div>
+    </div>
+</template>
+
+<script>
+    var refreshTimer;
+
+    return {
+        data() {
+            return {
+                allUsers: {},
+                restData: {},
+                timer: '',
+                loaded: false,
+            }
+        },
+        methods: {
+            init() {
+
+                this.dataFetcher();
+
+                refreshTimer = setInterval(() => {
+                    this.dataFetcher();
+                }, 20000)
+
+            },
+            fillHtml(array) {
+                var gridDat = '';
+                Object.keys(this.allUsers).forEach(key => {
+                    var value = this.allUsers[key];
+                    gridDat += `
+                        <div class="item ${value.checkTime ? value.checkTime.in && !value.checkTime.out ? 'meet' : value.checkTime.out ? 'home' : 'nomeet' : 'nomeet'}">
+                            <div class="itemtitle">
+                            <h3>${value.firstName}<br>
+                                <sub>${value.lastName}</sub>
+                            </h3>
+                            </div>
+                            <div class="desc">
+                            <p> ${value.checkTime ? value.checkTime.in ? 'ind: ' + value.checkTime.in : 'ikke her' : 'ikke her'} ${value.checkTime ? value.checkTime.out ? 'ud: ' + value.checkTime.out : '' : ''}</p>
+                            </div>
+                        </div>`
+                });
+                $$('#gridTable').html(gridDat);
+                $$('#navTit').html(`Din Instruktør: ${this.restData.instructor} - Lokale: ${this.restData.area} - Uge: ${this.restData.week}`)
+            },
+            dataFetcher() {
+                if (!this.loaded) app.preloader.show('blue');
+                app.request.json(`https://192.168.1.21/checkIn/endpoints/web/getUsersPerGroup.php?groupID=${this.$route.params.groupID}`, result => {
+                    if (result.result == 1) {
+                        this.allUsers = result.users;
+                        this.restData = {
+                            instructor: result.instructor,
+                            area: result.area,
+                            group: result.group,
+                            week: result.week,
+                            year: result.year
+                        }
+                        this.fillHtml();
+                        if (!this.loaded) this.loaded = !this.loaded;
+                        app.preloader.hide();
+                    }
+
+                }, (error) => {
+                    if (this.loaded) this.loaded = !this.loaded;
+                    app.preloader.show('blue')
+                });
+            },
+        },
+        on: {
+            pageMounted: function (page) {
+                this.init();
+            },
+            pageAfterOut() {
+                clearInterval(refreshTimer);
+            }
+        }
+    }
+</script>

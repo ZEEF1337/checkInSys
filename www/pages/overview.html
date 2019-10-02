@@ -1,0 +1,124 @@
+<template>
+    <div class="page" data-name="overview">
+        <div class="bottombox box">
+            <div class="box" style="margin: 35px;">
+                <div class="boxtitle">
+
+                    <div style="text-align:right;float:left;margin-left:5px;" class="noSelect">
+                        <div class="uploadbtnbox" style="display:inline;">
+                            <div style="display: inline-block;">
+                                <button @click="changeYear('decrease')"
+                                    class="newbtnstylesmall noSelect"
+                                    style="width:55px;height:25px;line-height:22px;font-size:16px;font-weight:normal;"><i
+                                        class="fas fa-arrow-left"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <span class="currYear"></span>
+
+                    <div style="text-align:right;float:right;margin-right:5px;" class="noSelect">
+                        <div class="uploadbtnbox" style="display:inline;">
+                            <div style="display: inline-block;">
+                                <button @click="changeYear('increase')" id="futurebtn"
+                                    class="newbtnstylesmall noSelect disabled"
+                                    style="width:55px;height:25px;line-height:22px;font-size:16px;font-weight:normal;"><i
+                                        class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="bottombox yearBox" style="overflow-y:auto;overflow-x:hidden;max-height:250px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Week</th>
+                                <th style="text-align: center;">Monday</th>
+                                <th style="text-align: center;">Tuesday</th>
+                                <th style="text-align: center;">Wednesday</th>
+                                <th style="text-align: center;">Thursday</th>
+                                <th style="text-align: center;">Friday</th>
+                            </tr>
+                        </thead>
+                        <tbody class="yearBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    var currentYear;
+    return {
+
+        /**
+         * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+         */
+        data: function () {
+            return {
+            };
+        },
+
+        // Framework7 Component Methods
+        methods: {
+            fillTable: function () {
+                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getAllWeeksPerUser.php?userID=${app.data['userID']}&year=${currentYear}`, {}, function (response) {
+                    if (response.result == 1) {
+                        $$('.currYear').html(response.year);
+                        let innerHTML = "";
+                        Object.keys(response.records).forEach((key, index) => {
+                            let value = response.records[key];
+                            innerHTML +=
+                                `
+                                <tr>
+                                    <td style="text-align:center;">${key}</td>
+                                    <td style="text-align:center;">${value.Monday ? value.Monday.in + ' - ' + value.Monday.out : ""}</td>
+                                    <td style="text-align:center;">${value.Tuesday ? value.Tuesday.in + ' - ' + value.Tuesday.out : ""}</td>
+                                    <td style="text-align:center;">${value.Wednesday ? value.Wednesday.in + ' - ' + value.Wednesday.out : ""}</td>
+                                    <td style="text-align:center;">${value.Thursday ? value.Thursday.in + ' - ' + value.Thursday.out : ""}</td>
+                                    <td style="text-align:center;">${value.Friday ? value.Friday.in + ' - ' + value.Friday.out : ""}</td>
+                                </tr>
+                                `;
+                        })
+                        $$('.yearBody').html(innerHTML);
+                    } else {
+                        $$('.yearBody').html(" ");
+                    }
+                });
+            },
+            changeYear: function (what2do) {
+                if (what2do == 'increase') {
+                    currentYear++;
+                    if (currentYear >= moment().format('YYYY')) {
+                        $$('#futurebtn').addClass('disabled');
+                    }
+                } else if (what2do == 'decrease') {
+                    currentYear--;
+                    $$('#futurebtn').removeClass('disabled');
+                }
+                $$('.currYear').html(currentYear);
+                this.fillTable();
+            },
+
+        },
+        on: {
+            //pageMounted trigger når siden bliver insat i DOMen
+            pageMounted: function (page) {
+                currentYear = moment().format('YYYY');
+                this.fillTable();
+
+                setTimeout(function () {
+                    let topOffset = $$('.yearBox')[0].offsetTop;
+                    let pageHeight = window.innerHeight;
+                    let rest = pageHeight - topOffset - 70;
+                    $$('.yearBox').css('max-height', `${rest}px`);
+                }, 200);
+            },
+        },
+    }
+
+
+</script>

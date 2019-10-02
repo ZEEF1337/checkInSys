@@ -1,0 +1,80 @@
+<template>
+  <div class="page" data-name="groupoverview">
+    <div class="boxgrid room" id="roomgridTable">
+    </div>
+
+
+  </div>
+</template>
+
+<script>
+  var refreshTimerRum;
+  viewRequest = (groupID) => {
+    app.views.main.router.navigate(`/usersoverview/${groupID}/`, { reloadCurrent: true, });
+  }
+
+  return {
+    data() {
+      return {
+        allUsers: {},
+        timer: '',
+        loaded: false,
+      }
+    },
+    methods: {
+      goBack() {
+
+
+      },
+      init() {
+
+        this.dataFetcher();
+
+        refreshTimerRum = setInterval(() => {
+          this.dataFetcher();
+        }, 20000)
+
+      },
+      fillHtml(array) {
+        var gridDat = '';
+        Object.keys(this.allUsers).forEach(key => {
+          var value = this.allUsers[key];
+          gridDat += `
+              <a class="item home" href="/usersoverview/${value.ID}/">
+                <div class="itemtitle">
+                  <h3>${value.Instructor}<br>
+                  </h3>
+                </div>
+                <div class="desc">
+                  <p>${value.Area}</p>
+                </div>
+              </a>`
+        });
+        $$('#roomgridTable').html(gridDat);
+      },
+      dataFetcher() {
+        if (!this.loaded) app.preloader.show('blue');
+        app.request.json(`https://192.168.1.21/checkIn/endpoints/web/getAreas.php?userID=${app.data['userID']}`, result => {
+          if (result.result == 1) {
+            this.allUsers = result.records;
+            this.fillHtml();
+            if (!this.loaded) this.loaded = !this.loaded;
+            app.preloader.hide();
+          }
+        }, (error) => {
+          console.dir(error)
+          if (this.loaded) this.loaded = !this.loaded;
+          app.preloader.show('blue')
+        });
+      },
+    },
+    on: {
+      pageMounted: function (page) {
+        this.init();
+      },
+      pageAfterOut: function (page) {
+        clearInterval(refreshTimerRum);
+      }
+    }
+  }
+</script>

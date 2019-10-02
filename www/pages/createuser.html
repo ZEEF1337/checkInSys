@@ -1,0 +1,205 @@
+<template>
+    <div class="page" data-name="createuser">
+        <div class="bottombox box">
+            <div class="opretBruger boxtitle">Opret bruger</div>
+
+            <div style="width: 90%;margin-left:5%;">
+                <div class="inputfieldtitle">Fornavn</div>
+                <input autocomplete="off" id="cu_fname" class="inputfield" type="text" name="fname">
+
+                <div class="inputfieldtitle">Efternavn</div>
+                <input autocomplete="off" id="cu_lname" class="inputfield" type="text" name="lname">
+
+                <div class="inputfieldtitle">Email</div>
+                <input autocomplete="off" id="cu_email" class="inputfield" type="text" name="email">
+
+                <div class="inputfieldtitle">Adgangskode</div>
+                <input class="inputfield" type="password" id="cu_password" name="Pass">
+
+                <div class="inputfieldtitle">Bekræft adgangskode</div>
+                <input class="inputfield" type="password" id="cu_confPassword" name="confPass">
+
+                
+                <div class="bottombox testbox" style="overflow-y:auto;overflow-x:hidden;max-height:250px;margin-top:35px;">
+                        <div style="margin-bottom:10px;" >
+                                <div style="display: inline-block;">
+                                    <a @click="fillTable" class="newbtnstylesmall noSelect">Opdater table</a>
+                                </div>
+                            </div>
+                    <table class="">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;width:50%;">Kort ID</th>
+                                <th style="text-align: center;width:25%;">Senest scanning</th>
+                                <th style="text-align: center;width:25%;">Scanner brugt</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="unknownCardsBody">
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div style="margin-top: 25px;">
+                <div style="display:inline-block;margin-left:5%;">
+                    <div class="inputfieldtitle" style="margin:0;">Område</div>
+                    <select class="selectedfile inputfield areaDropDown" style="width:250px!important;margin:0;">
+                    </select>
+                </div>
+                <div class="inputfield"
+                    style="float:right;margin-right:5%;width:fit-content!important;text-align:right;margin-top:20px;">
+                    <label for="isAdmin" class="noSelect">Administrator konto</label>
+                    <input type="checkbox" id="isAdmin" style="height:20px;width:20px;vertical-align: middle;">
+                </div>
+                <div class="inputfield"
+                    style="float:right;margin-right:5%;width:fit-content!important;text-align:right;margin-top:20px;">
+                    <label for="isInstructor" class="noSelect">Instruktør konto</label>
+                    <input type="checkbox" id="isInstructor" style="height:20px;width:20px;vertical-align: middle;">
+                </div>
+            </div>
+
+
+            <div class="btnbox">
+                <div style="display: inline-block;">
+                    <a @click="createUser" class="newbtnstyle noSelect">Opret bruger</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    return {
+
+        /**
+         * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+         */
+        data: function () {
+            return {
+            };
+        },
+
+        // Framework7 Component Methods
+        methods: {
+            fillTable: function () {
+                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUnknownCardsFiltered.php`, {}, function (response) {
+                    if (response.result == 1) {
+                        let innerHTML = "";
+                        Object.keys(response.records).forEach((key, index) => {
+                            let value = response.records[key];
+                            innerHTML +=
+                                `
+                                <tr>
+                                    <td style="text-align:left;">${value.CardID}</td>
+                                    <td style="text-align:center;">${value.Timestamp}</td>
+                                    <td style="text-align:center;">${value.ScannerUsed}</td>
+                                    <td>
+                                        <input Disabled type="radio" name="CardGroup" value="${value.CardID}">
+                                    </td>
+                                </tr>
+                                `;
+                        });
+                        $$('.unknownCardsBody').html(innerHTML);
+                    } else {
+                        $$('.unknownCardsBody').html(" ");
+                    }
+                });
+            },
+            fillDropDown: function () {
+                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getAreas.php?userID=${app.data['userID']}`, {}, function (response) {
+                    if (response.result == 1) {
+                        let innerHTML = "";
+                        Object.keys(response.records).forEach((key, index) => {
+                            let value = response.records[key];
+                            innerHTML +=
+                                `
+                                <option value="${value.ID}">${value.Area} - ${value.Instructor}</option>
+                                `;
+                        });
+                        $$('.areaDropDown').html(innerHTML);
+                    }
+                });
+            },
+
+            createUser: function () {
+                let firstName = $$('#cu_fname').val();
+                let lastName = $$('#cu_lname').val();
+                let email = $$('#cu_email').val();
+                let password = $$('#cu_password').val();
+                let confPassword = $$('#cu_confPassword').val();
+                let userGroup = $$('.areaDropDown').val();
+                let cardID = -1;
+                let isAdmin = 0;
+                let isInstructor = 0;
+                let that = this;
+                if ($$('#isAdmin').prop('checked') == true) {
+                    isAdmin = 1;
+                }
+                if ($$('#isInstructor').prop('checked') == true) {
+                    isInstructor = 1;
+                }
+                let checkBoxObj = $$('.unknownCardsBody').find('input[type="radio"]');
+                checkBoxObj.forEach(element => {
+                    if (element.checked) {
+                        cardID = element.value;
+                    }
+                });
+                if (firstName == "" || lastName == "" || email == "" || password == "" || confPassword == "" || userGroup == "") {
+                    app.methods.statusMsg("Alle felter skal være udfyldt", "error", ".opretBruger");
+                    return;
+                }
+                if (password != confPassword) {
+                    app.methods.statusMsg("Adgangskoderne matcher ikke", "error", ".opretBruger");
+                    return;
+                }
+                if (cardID == -1) {
+                    app.methods.statusMsg("Intet kort er valgt", "error", ".opretBruger");
+                    return;
+                }
+
+                app.request.post(`${app.data['serverIP']}endpoints/web/postCreateUser.php`, {
+                    email: email,
+                    password: password,
+                    firstName: firstName,
+                    lastName: lastName,
+                    userGroup: userGroup,
+                    cardID: cardID,
+                    isAdmin: isAdmin,
+                    isInstructor: isInstructor,
+                }, function (response) {
+                    if (response.result == 0) {
+                        app.methods.statusMsg(response.message, "error", ".opretBruger");
+                        return;
+                    } else {
+                        app.request.json(`https://192.168.1.21/checkIn/endpoints/web/deleteUnknownCard.php?cardID=${cardID}`, result => {});
+                        app.methods.statusMsg(response.message, "success", ".opretBruger");
+                        setTimeout(function () { app.views.main.router.navigate("/createuser/", { reloadCurrent: true, }) }, 3000);
+
+                    }
+                }, function (e, e2) { console.error(e); console.error(e2) }, "json");
+            },
+        },
+        on: {
+            //pageMounted trigger når siden bliver insat i DOMen
+            pageMounted: function (page) {
+                this.fillTable();
+                this.fillDropDown();
+                var oldrow = null;
+                $$('.unknownCardsBody').on('click', (e) => {
+                    if (oldrow == null) {
+                        oldrow = e;
+                    } else {
+                        $$(oldrow.target.parentElement).css('background-color', '');
+                        oldrow = e;
+                    }
+                    $$(e.target.parentElement).find('input[type="radio"]').prop('checked', true);
+                    $$(e.target.parentElement).css('background-color', '#62FF8E');
+                });
+            },
+        },
+    }
+
+
+</script>

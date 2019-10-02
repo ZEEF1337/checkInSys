@@ -1,0 +1,93 @@
+<template>
+    <div class="page" data-name="unknowncardlist">
+        <div class="bottombox box">
+
+            <div style="margin-left:35px;margin-top:35px;width:25%;display:inline-block;">
+                <span style="position:absolute;margin-left:5px;margin-top:7px;"><i
+                        class="fas fa-search icon-format"></i></span>
+                <input id="unknowncardsSearchPerCard" style="padding-left: 25px !important;" class="inputfield" type="text"
+                    placeholder="Søg per kort..">
+            </div>
+            <div style="margin-left:35px;margin-top:35px;width: 25%;display:inline-block;">
+                    <span style="position:absolute;margin-left:5px;margin-top:7px;"><i
+                            class="fas fa-search icon-format"></i></span>
+                    <input id="unknowncardsSearchPerTimestamp" style="padding-left: 25px !important;" class="inputfield" type="text"
+                        placeholder="Søg per tidspunkt">
+                </div>
+
+            <div class="box" style="margin: 35px;">
+                <div class="boxtitle">Alle ukendte kort</div>
+                <div class="bottombox testbox" style="overflow-y:auto;overflow-x:hidden;max-height:250px;">
+                    <table id="unknownCardsTable">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;width:25%;">Kort</th>
+                                <th style="text-align: center;width:20%;">Tidspunkt</th>
+                                <th style="text-align: center;width:15%;">Scanner brugt</th>
+                            </tr>
+                        </thead>
+                        <tbody class="unknownCardsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+        return {
+    
+            /**
+             * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+             */
+            data: function () {
+                return {
+                };
+            },
+    
+            // Framework7 Component Methods
+            methods: {
+                fillTable: function () {
+                    app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUnknownCards.php`, {}, function (response) {
+                        if (response.result == 1) {
+                            let innerHTML = "";
+                            Object.keys(response.records).forEach((key, index) => {
+                                let value = response.records[key];
+                                innerHTML +=
+                                    `
+                                <tr class="trs">
+                                    <td class="tds" style="text-align:center;">${value.CardID}</td>
+                                    <td class="tds" style="text-align:center;">${value.Timestamp}</td>
+                                    <td class="tds" style="text-align:center;">${value.ScannerUsed}</td>
+                                </tr>
+                                    `;
+                            });
+                            $$('.unknownCardsBody').html(innerHTML);
+                        } else {
+                            $$('.unknownCardsBody').html(" ");
+                        }
+                    });
+                },
+    
+            },
+            on: {
+                //pageMounted trigger når siden bliver insat i DOMen
+                pageMounted: function (page) {
+                    this.fillTable();
+                    app.methods.searchFunction('unknowncardsSearchPerCard', 'unknownCardsTable', 0);
+                    app.methods.searchFunction('unknowncardsSearchPerTimestamp', 'unknownCardsTable', 1);
+
+                    setTimeout(function () {
+                        let topOffset = $$('.testbox')[0].offsetTop;
+                        let pageHeight = window.innerHeight;
+                        let rest = pageHeight - topOffset - 164;
+                        $$('.testbox').css('max-height', `${rest}px`);
+                    }, 200);
+                },
+            },
+        }
+    
+    
+    </script>

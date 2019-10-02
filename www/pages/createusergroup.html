@@ -1,0 +1,68 @@
+<template>
+    <div class="page" data-name="createusergroup">
+        <div class="bottombox box">
+            <div class="opretBrugerGruppe boxtitle">Opret bruger gruppe</div>
+
+            <div style="width: 90%;margin-left:5%;">
+                <div class="inputfieldtitle">Område</div>
+                <input autocomplete="off" id="cug_area" class="inputfield" type="text" name="fname">
+
+                <div class="inputfieldtitle">Instruktør</div>
+                <input autocomplete="off" id="cug_instructor" class="inputfield" type="text" name="lname">
+            </div>
+            <div class="btnbox">
+                <div style="display: inline-block;">
+                    <a @click="createUserGroup" class="newbtnstyle noSelect">Opret bruger gruppe</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    return {
+
+        /**
+         * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+         */
+        data: function () {
+            return {
+            };
+        },
+
+        // Framework7 Component Methods
+        methods: {
+            createUserGroup: function () {
+                let area = $$('#cug_area').val();
+                let instructor = $$('#cug_instructor').val();
+                if (area == "" || instructor == "") {
+                    app.methods.statusMsg("Alle felter skal være udfyldt", "error", ".opretBrugerGruppe");
+                    return;
+                }
+
+                app.request.post(`${app.data['serverIP']}endpoints/web/postCreateUserGroup.php`, {
+                    area: area,
+                    instructor: instructor,
+                }, function (response) {
+                    if (response.result == 0) {
+                        app.methods.statusMsg(response.message, "error", ".opretBrugerGruppe");
+                        return;
+                    } else {
+                        app.methods.statusMsg(response.message, "success", ".opretBrugerGruppe");
+                        setTimeout(function () { app.views.main.router.navigate("/createusergroup/", { reloadCurrent: true, }) }, 3000);
+
+                    }
+                }, function (e, e2) { console.error(e); console.error(e2) }, "json");
+            },
+
+        },
+        on: {
+            //pageMounted trigger når siden bliver insat i DOMen
+            pageMounted: function (page) {
+
+            },
+        },
+    }
+
+
+</script>
