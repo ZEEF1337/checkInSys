@@ -25,6 +25,9 @@ var app = new Framework7({
   methods: {
     
     popNavbar: function(){
+      if(app.data['isAdmin']) {
+        $$('#navadminaccordion').show();
+      }
       let navbarwidth = $$('#navbar')[0].clientWidth;
       document.getElementById('view-navbar').style.width = navbarwidth + "px";
       document.getElementById('view-home').style.left = navbarwidth + "px";
