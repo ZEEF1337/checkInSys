@@ -41,13 +41,14 @@
                             return;
                         } else {
                             app.methods.statusMsg(response.message, "success", ".loginHeader");
+                            app.data['userEmail'] = response.email;
+                            app.data['firstname'] = response.firstName;
+                            app.data['lastname'] = response.lastName;
+                            app.data['userID'] = response.userID;
+                            app.data['isAdmin'] = response.isAdmin;
+                            app.data['loggedIn'] = 1;
+                            
                             setTimeout(function () { 
-                                app.data['userEmail'] = response.email;
-                                app.data['firstname'] = response.firstName;
-                                app.data['lastname'] = response.lastName;
-                                app.data['userID'] = response.userID;
-                                app.data['isAdmin'] = response.isAdmin;
-                                app.data['loggedIn'] = 1;
                                 app.methods.popNavbar();
                                 $$('#view-navbar').show();
                                 $$(`#navhome`).addClass('active');
@@ -56,8 +57,6 @@
                         }
                     }, function (e, e2) { console.error(e); console.error(e2) }, "json");
                 },
-
-    
             },
             on: {
                 //pageMounted trigger når siden bliver insat i DOMen
@@ -65,8 +64,6 @@
                 },
             },
         }
-    
-    
     </script>
 
     <style>
