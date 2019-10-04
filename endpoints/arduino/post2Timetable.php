@@ -9,6 +9,13 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 
+if(!isset($_POST['cardID']) || !isset($_POST['scannerMAC'])){
+    $out['result'] = 0;
+    $json = json_encode($out);
+    print_r($json);
+    return;
+}
+
 $cardID = $_POST['cardID'];
 $scannerMAC = $_POST['scannerMAC'];
 
