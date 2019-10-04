@@ -232,9 +232,12 @@ function checkIfAdmin($userID){
     $stmt = $db->prepare($query);
     try{
         $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        extract($row);
-        return $isAdmin;
+        $num = $stmt->rowCount();
+        if($num>0){
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            extract($row);
+            return $isAdmin;
+        }
     } catch(PDOException $e){
         return($e);
     }
@@ -273,10 +276,14 @@ function getNames($email){
     $stmt = $db->prepare($query);
     try{
         $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        extract($row);
-        $names = $Firstname." ".$Lastname;
-        return $names;
+        $num = $stmt->rowCount();
+        if($num>0){
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            extract($row);
+            $out['firstName'] = $Firstname;
+            $out['lastName'] = $Lastname;
+            return $out;
+        }
     } catch(PDOException $e){
         return($e);
     }
