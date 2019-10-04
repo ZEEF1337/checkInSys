@@ -34,6 +34,16 @@ routes = [
     }
   },
   {
+    name: 'createscanner',
+    path: '/createscanner/',
+    componentUrl: './pages/createscanner.html',
+    on:{
+      pageInit: function (event, page){
+        app.methods.highlightli("navcreatescanner");
+      }
+    }
+  },
+  {
     name: 'editprofile',
     path: '/editprofile/',
     componentUrl: './pages/editprofile.html',
