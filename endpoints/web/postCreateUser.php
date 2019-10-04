@@ -9,6 +9,13 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 
+if(!isset($_POST['email']) || !isset($_POST['userID']) || !isset($_POST['password']) || !isset($_POST['firstName']) || !isset($_POST['lastName']) || !isset($_POST['userGroup']) || !isset($_POST['cardID']) || !isset($_POST['isAdmin']) || !isset($_POST['isInstructor'])){
+    $out['result'] = 0;
+    $out['message'] = "Missing param";
+    $json = json_encode($out);
+    print_r($json);
+    return;
+}
 
 $givenEmail = $_POST['email'];
 $givenPassword = $_POST['password'];
@@ -18,6 +25,18 @@ $givenGroup = $_POST['userGroup'];
 $givenCardID = $_POST['cardID'];
 $givenIsAdmin = $_POST['isAdmin'];
 $givenIsInstructor = $_POST['isInstructor'];
+$userID = $_POST['userID'];
+
+$adminCheck = checkIfAdmin($userID);
+
+if($adminCheck == 0){
+    $out['result'] = 0;
+    $out['message'] = "No access";
+    $json = json_encode($out);
+    print_r($json);
+    return;
+}
+
 
 $emailAlreadyExists = emailExists($givenEmail);
 $cardAlreadyExists = cardExists($givenCardID);

@@ -6,9 +6,10 @@ header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Ca
 header("Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS, DELETE");
 header("Content-Type: application/json; charset=UTF-8");
 
+include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 
-if(!$_GET['cardID']){
+if(!isset($_GET['cardID']) || !isset($_GET['userID'])){
     $out['result'] = 0;
     $json = json_encode($out);
     print_r($json);
@@ -16,6 +17,16 @@ if(!$_GET['cardID']){
 }
 
 $cardID = $_GET['cardID'];
+$userID = $_GET['userID'];
+
+$adminCheck = checkIfAdmin($userID);
+
+if($adminCheck == 0){
+    $out['result'] = 0;
+    $json = json_encode($out);
+    print_r($json);
+    return;
+}
 
 $database = new Database();
 $db = $database->getConnection();

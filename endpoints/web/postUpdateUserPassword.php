@@ -9,9 +9,27 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 
+if(!isset($_POST['password']) || !isset($_POST['userID']) || !isset($_POST['updateUserID'])){
+    $out['result'] = 0;
+    $out['message'] = "Missing param";
+    $json = json_encode($out);
+    print_r($json);
+    return;
+}
 
 $givenPassword = $_POST['password'];
-$givenUserID = $_POST['userID'];
+$givenUserID = $_POST['updateUserID'];
+$userID = $_POST['userID'];
+
+$adminCheck = checkIfAdmin($userID);
+
+if($adminCheck == 0){
+    $out['result'] = 0;
+    $out['message'] = "No access";
+    $json = json_encode($out);
+    print_r($json);
+    return;
+}
 
 $database = new Database();
 $db = $database->getConnection();
