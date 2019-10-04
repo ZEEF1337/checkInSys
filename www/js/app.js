@@ -52,8 +52,10 @@ var app = new Framework7({
     logout: function(){
       app.data['firstname'] = "";
       app.data['lastname'] = "";
+      app.data['userEmail'] = "";
       app.data['userAvatar'] = "../images/default.png";
       app.data['userID'] = 0;
+      app.data['isAdmin'] = 0;
       app.data['loggedIn'] = false;
       $$('#view-navbar').hide();
     },
