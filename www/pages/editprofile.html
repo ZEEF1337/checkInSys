@@ -46,7 +46,6 @@
 
 
 <script>
-    var inspectedUser;
     return {
 
         /**
@@ -60,38 +59,12 @@
         // Framework7 Component Methods
         methods: {
             fillAccountInformation: function () {
-                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUser.php?userID=${inspectedUser}`, {}, function (response) {
+                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUser.php?userID=${app.data['userID']}`, {}, function (response) {
                     if (response.result == 1) {
                         $$('.ep_fname').val(`${response.users[0].firstName}`);
                         $$('.ep_lname').val(`${response.users[0].lastName}`);
                         $$('.ep_email').val(`${response.users[0].email}`);
-                        $$('.ep_card').val(`${response.users[0].cardID}`);
-                        $$('.areaDropDown').val(response.users[0].areaID)
                         $$('.ep_id').val(response.users[0].ID);
-                        if(response.users[0].isAdmin == 1){
-                            $$('.ep_isAdmin').prop('checked', true);
-                        }
-                        if(response.users[0].isInstructor == 1){
-                            $$('.ep_isInstructor').prop('checked', true);
-                        }
-
-                    }
-                }, function (e, e2) { console.error(e); console.error(e2) });
-            },
-            fillAreaDropDown: function () {
-                that = this;
-                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getAreas.php?userID=${app.data['userID']}`, {}, function (response) {
-                    if (response.result == 1) {
-                        let innerHTML = "";
-                        Object.keys(response.records).forEach((key, index) => {
-                            let value = response.records[key];
-                            innerHTML +=
-                                `
-                                <option value="${value.ID}">${value.Area} - ${value.Instructor}</option>
-                                `;
-                        });
-                        $$('.areaDropDown').html(innerHTML);
-                        that.fillAccountInformation();
                     }
                 }, function (e, e2) { console.error(e); console.error(e2) });
             },
@@ -100,17 +73,7 @@
                 let firstName = $$('.ep_fname').val();
                 let lastName = $$('.ep_lname').val();
                 let email = $$('.ep_email').val();
-                let userGroup = $$('.areaDropDown').val();
-                let cardID = $$('.ep_card').val();
-                let isAdmin = 0;
-                let isInstructor = 0;
-                if ($$('.ep_isAdmin').prop('checked') == true) {
-                    isAdmin = 1;
-                }
-                if ($$('.ep_isInstructor').prop('checked') == true) {
-                    isInstructor = 1;
-                }
-                if (firstName == "" || lastName == "" || email == "" || userGroup == "" || cardID == "") {
+                if (firstName == "" || lastName == "" || email == "") {
                     app.methods.statusMsg("Alle felter skal være udfyldt", "error", ".psettings");
                     return;
                 }
@@ -119,32 +82,29 @@
                     return;
                 }
 
-                app.request.post(`${app.data['serverIP']}endpoints/web/postUpdateUser.php`, {
+                app.request.post(`${app.data['serverIP']}endpoints/web/postChangeUserSettings.php`, {
                     userID: ID,
                     email: email,
                     firstName: firstName,
                     lastName: lastName,
-                    userGroup: userGroup,
-                    cardID: cardID,
-                    isAdmin: isAdmin,
-                    isInstructor: isInstructor,
                 }, function (response) {
                     if (response.result == 0) {
                         app.methods.statusMsg(response.message, "error", ".psettings");
                         return;
                     } else {
                         app.methods.statusMsg(response.message, "success", ".psettings");
-                        setTimeout(function () { app.views.main.router.navigate("/usergrouplist/", { reloadCurrent: true, }) }, 3000);
+                        setTimeout(function () { app.views.main.router.navigate("/editprofile/", { reloadCurrent: true, }) }, 3000);
 
                     }
                 }, function (e, e2) { console.error(e); console.error(e2) }, "json");
             },
             updateUserPassword: function () {
                 let ID = $$('.ep_id').val();
+                let oldPassword = $$('.ep_oldPass').val();
                 let password = $$('.ep_newPass').val();
                 let confPassword = $$('.ep_confPass').val();
 
-                if (password == "" || confPassword == "") {
+                if (password == "" || confPassword == "" || oldPassword == "") {
                     app.methods.statusMsg("Alle felter skal være udfyldt", "error", ".upassword");
                     return;
                 }
@@ -157,16 +117,17 @@
                     return;
                 }
 
-                app.request.post(`${app.data['serverIP']}endpoints/web/postUpdateUserPassword.php`, {
+                app.request.post(`${app.data['serverIP']}endpoints/web/postChangeUserPassword.php`, {
                     userID: ID,
                     password: password,
+                    oldPassword: oldPassword,
                 }, function (response) {
                     if (response.result == 0) {
                         app.methods.statusMsg(response.message, "error", ".upassword");
                         return;
                     } else {
                         app.methods.statusMsg(response.message, "success", ".upassword");
-                        setTimeout(function () { app.views.main.router.navigate("/userlist/", { reloadCurrent: true, }) }, 3000);
+                        setTimeout(function () { app.views.main.router.navigate("/editprofile/", { reloadCurrent: true, }) }, 3000);
 
                     }
                 }, function (e, e2) { console.error(e); console.error(e2) }, "json");
@@ -175,8 +136,7 @@
         on: {
             //pageMounted trigger når siden bliver insat i DOMen
             pageMounted: function (page) {
-                inspectedUser = page.detail.route.params.userID;
-                this.fillAreaDropDown();
+                this.fillAccountInformation();
             },
         },
     }
