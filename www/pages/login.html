@@ -43,7 +43,8 @@
                             app.methods.statusMsg(response.message, "success", ".loginHeader");
                             setTimeout(function () { 
                                 app.data['userEmail'] = response.email;
-                                app.data['username'] = response.names;
+                                app.data['firstname'] = response.firstName;
+                                app.data['lastname'] = response.lastName;
                                 app.data['userID'] = response.userID;
                                 app.data['isAdmin'] = response.isAdmin;
                                 app.data['loggedIn'] = 1;
