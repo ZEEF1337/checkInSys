@@ -17,7 +17,7 @@ $cleanpass = $_POST['password'];
 $login = verifyPass($email, $cleanpass);
 $userID = getUserIDFromEmail($email);
 $adminCheck = checkIfAdmin($userID);
-$firstLastName = getNames($email);
+$getNames = getNames($email);
 
 if($login == 1){
     $out['result'] = 1;
@@ -25,7 +25,8 @@ if($login == 1){
     $out['userID'] = (INT)$userID;
     $out['isAdmin'] = (INT)$adminCheck;
     $out['email'] = $email;
-    $out['names'] = $firstLastName;
+    $out['firstName'] = $getNames['firstName'];
+    $out['lastName'] = $getNames['lastName'];
 }else{
     $out['result'] = 0;
     $out['message'] = "Forkert brugernavn eller adgangskode.";
