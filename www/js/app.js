@@ -11,7 +11,8 @@ var app = new Framework7({
   // App root data
   data: function () {
     return {
-      username: "",
+      firstname: "",
+      lastname: "",
       userAvatar: "../images/default.png",
       userID: 0,
       userEmail: "",
@@ -27,7 +28,7 @@ var app = new Framework7({
       let navbarwidth = $$('#navbar')[0].clientWidth;
       document.getElementById('view-navbar').style.width = navbarwidth + "px";
       document.getElementById('view-home').style.left = navbarwidth + "px";
-      $$('.usernamefield').html(app.data['username']);
+      $$('.usernamefield').html(app.data['firstname'] +" "+app.data['lastname']);
       $$('.profilepic').attr('src', app.data['userAvatar']);
     },
 
@@ -49,7 +50,8 @@ var app = new Framework7({
     },
 
     logout: function(){
-      app.data['username'] = "...";
+      app.data['firstname'] = "";
+      app.data['lastname'] = "";
       app.data['userAvatar'] = "../images/default.png";
       app.data['userID'] = 0;
       app.data['loggedIn'] = false;
