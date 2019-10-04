@@ -43,6 +43,7 @@
                 app.request.post(`${app.data['serverIP']}endpoints/web/postCreateUserGroup.php`, {
                     area: area,
                     instructor: instructor,
+                    userID: app.data['userID'],
                 }, function (response) {
                     if (response.result == 0) {
                         app.methods.statusMsg(response.message, "error", ".opretBrugerGruppe");

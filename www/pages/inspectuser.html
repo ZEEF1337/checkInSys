@@ -137,7 +137,7 @@
                 }
 
                 app.request.post(`${app.data['serverIP']}endpoints/web/postUpdateUser.php`, {
-                    userID: ID,
+                    updateUserID: ID,
                     email: email,
                     firstName: firstName,
                     lastName: lastName,
@@ -145,6 +145,7 @@
                     cardID: cardID,
                     isAdmin: isAdmin,
                     isInstructor: isInstructor,
+                    userID: app.data['userID'],
                 }, function (response) {
                     if (response.result == 0) {
                         app.methods.statusMsg(response.message, "error", ".psettings");
@@ -175,15 +176,16 @@
                 }
 
                 app.request.post(`${app.data['serverIP']}endpoints/web/postUpdateUserPassword.php`, {
-                    userID: ID,
+                    updateUserID: ID,
                     password: password,
+                    userID: app.data['userID'],
                 }, function (response) {
                     if (response.result == 0) {
                         app.methods.statusMsg(response.message, "error", ".upassword");
                         return;
                     } else {
                         app.methods.statusMsg(response.message, "success", ".upassword");
-                        setTimeout(function () { app.views.main.router.navigate("/userlist/", { reloadCurrent: true, }) }, 3000);
+                        setTimeout(function () { app.views.main.router.navigate("/usergrouplist/", { reloadCurrent: true, }) }, 3000);
 
                     }
                 }, function (e, e2) { console.error(e); console.error(e2) }, "json");
