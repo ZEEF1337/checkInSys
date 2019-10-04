@@ -167,13 +167,14 @@
                     userGroup: userGroup,
                     cardID: cardID,
                     isAdmin: isAdmin,
+                    userID: app.data['userID'],
                     isInstructor: isInstructor,
                 }, function (response) {
                     if (response.result == 0) {
                         app.methods.statusMsg(response.message, "error", ".opretBruger");
                         return;
                     } else {
-                        app.request.json(`https://192.168.1.21/checkIn/endpoints/web/deleteUnknownCard.php?cardID=${cardID}`, result => {});
+                        app.request.json(`https://192.168.1.21/checkIn/endpoints/web/deleteUnknownCard.php?cardID=${cardID}&userID=${app.data['userID']}`, result => {});
                         app.methods.statusMsg(response.message, "success", ".opretBruger");
                         setTimeout(function () { app.views.main.router.navigate("/createuser/", { reloadCurrent: true, }) }, 3000);
 
