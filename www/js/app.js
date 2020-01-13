@@ -18,7 +18,7 @@ var app = new Framework7({
       userEmail: "",
       isAdmin: 0,
       loggedIn: false,
-      serverIP: "https://192.168.1.21/checkIn/",
+      serverIP: "https://192.168.195.65/checkIn/",
     };
   },
   // App root methods
