@@ -14,9 +14,11 @@ $db = $database->getConnection();
 
 date_default_timezone_set('Europe/Copenhagen');
 
-$query = "SELECT DISTINCT u.CardID, GROUP_CONCAT(DISTINCT u.Timestamp ORDER BY u.Timestamp DESC SEPARATOR ', ') AS Timestamp,";
-$query .= " GROUP_CONCAT(DISTINCT u.ScannerUsed ORDER BY u.ScannerUsed DESC SEPARATOR ', ') AS ScannerUsed";
+$query = "SELECT DISTINCT u.CardID, GROUP_CONCAT(DISTINCT u.Timestamp ORDER BY u.Timestamp DESC SEPARATOR ', ') AS TIMESTAMP,";
+$query .= " substring_index(GROUP_CONCAT(u.ScannerUsed ORDER BY u.Timestamp DESC SEPARATOR ', ' ), ',', 3) AS ScannerUsed";
 $query .= " FROM unknowncards AS u INNER JOIN scanners ON scanners.ID = u.ScannerUsed GROUP BY u.CardID ORDER BY Timestamp DESC;";
+
+
 $stmt = $db->prepare($query);
 
 try{
@@ -27,7 +29,7 @@ try{
         $out["records"] = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
-            $explodedTimestamp = explode(",", $Timestamp);
+            $explodedTimestamp = explode(",", $TIMESTAMP);
             $unixTime = strtotime($explodedTimestamp[0]);
             $formattedDate = date('H:i - d-m-Y', $unixTime);
 
