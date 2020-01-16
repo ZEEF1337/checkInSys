@@ -8,14 +8,17 @@ header("Content-Type: application/json; charset=UTF-8");
 
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 
-$userID = $_GET['userID'];
 
-if(!$userID){
+
+if(!isset($_GET['userID'])){
     $out['result'] = 0;
     $json = json_encode($out);
     print_r($json);
     return;
 }
+
+$userID = $_GET['userID'];
+
 
 $database = new Database();
 $db = $database->getConnection();
@@ -37,7 +40,6 @@ try{
     if($num > 0){
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
-            print_r(json_decode($Tuesday));
             $temp = array(
                 "Monday" => json_decode($Monday),
                 "Tuesday" => json_decode($Tuesday),
