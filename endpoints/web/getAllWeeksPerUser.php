@@ -8,15 +8,17 @@ header("Content-Type: application/json; charset=UTF-8");
 
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 
-$userID = $_GET['userID'];
-$givenYear = $_GET['year'];
-
-if(!$userID || !$givenYear){
+if(!isset($_GET['userID']) || !isset($_GET['year'])){
     $out['result'] = 0;
     $json = json_encode($out);
     print_r($json);
     return;
 }
+
+
+$userID = $_GET['userID'];
+$givenYear = $_GET['year'];
+
 
 $database = new Database();
 $db = $database->getConnection();
