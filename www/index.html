@@ -35,14 +35,21 @@ integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9
 <body>
   <div id="app">
     <!-- The view we have dedicated to the navbar -->
-    <div id="view-navbar" class="view view-navbar"></div>
+    <!-- <div id="view-navbar" class="view view-navbar fadeinout"></div> -->
     <!-- The main view which contains all the data that we want to present to the user -->
-    <div id="view-home" class="view view-main tab tab-active">
+    <div id="view-home" class="view view-main">
       <!-- Page, data-name contains page name which can be used in page callbacks -->
       <div class="page" data-name="home" url="/createuser/">
         <!-- Scrollable page content-->
         <div class="page-content">
         </div>
+      </div>
+          <!-- Floating Action Button -->
+      <div class="fab fab-right-bottom"> 
+        <a href="/panel/">
+        <!-- <a href="#" onclick="showNav()"> -->
+          <i class="icon f7-icons">menu</i>
+        </a>
       </div>
     </div>
   </div>

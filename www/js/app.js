@@ -11,19 +11,20 @@ var app = new Framework7({
   // App root data
   data: function () {
     return {
-      firstname: "",
-      lastname: "",
+      firstname: "Jimmie",
+      lastname: "Andersen",
       userAvatar: "../images/default.png",
-      userID: 0,
+      userID: 6,
       userEmail: "",
-      isAdmin: 0,
-      loggedIn: false,
-      serverIP: "https://192.168.1.21/checkIn/",
+      isAdmin: 1,
+      loggedIn: true,
+      serverIP: "http://192.168.0.200/checkIn/",
     };
   },
   // App root methods
   methods: {
     
+    // Alt det her skal ændres.
     popNavbar: function(){
       if(app.data['isAdmin']) {
         $$('#navadminaccordion').show();
@@ -62,6 +63,8 @@ var app = new Framework7({
       app.data['loggedIn'] = false;
       $$('#view-navbar').hide();
     },
+    //Indtil den her kommentar
+
 
     statusMsg: function (statusmsg, type, headerclass) {
         let bkcolor;
@@ -158,6 +161,7 @@ var app = new Framework7({
         }
 
         // Dette er for at sikre os at den første side der bliver indlæst af systemet, er udlon siden
+        //#BringNibeBack
         let currentpage = app.views.main.router.currentPageEl.dataset.name;
         if (currentpage == "home") {
           app.views.main.router.navigate("/currentDay/", {
@@ -166,10 +170,14 @@ var app = new Framework7({
         };
         },
         pageAfterIn: function (page){
-          setTimeout(function () {
-            app.methods.popNavbar();
-          },25);
+
         }
+      },
+
+      //Panel specifik ting til eftertanke
+      panel: {
+        collapsedBreakpoint: 768,
+        visibleBreakpoint: 1024,
       },
   });
 
@@ -186,3 +194,4 @@ var navbarView = app.views.create('#view-navbar', {
   animate: false,
   linksView: homeView,
 });
+

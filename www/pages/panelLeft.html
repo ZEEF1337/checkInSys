@@ -1,0 +1,28 @@
+<template>
+    <div class="panel panel-left panel-cover" data-name="panelLeft" id ="panelLeft">
+        <div class="view">
+
+        </div>
+    </div>
+</template>
+
+<script>
+    return {
+
+        /**
+         * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+         */
+        data: function () {
+            return {
+            };
+        },
+        mounted:  function() {
+            var app = this.$app;
+            app.views.create(this.$el.find('.view'), {
+                url: '/navbar/'
+            })
+        }
+    }
+
+
+</script>

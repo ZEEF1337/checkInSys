@@ -168,11 +168,18 @@ routes = [
     path: '/navbar/', // Den sti som der skal kaldes når der routes i HTML koden, dvs der skal peges på denne sti i 'href'
     componentUrl: './pages/navbar.html', // Den path hvor i filen som vi prøver at indlæse ligger i og navnet på filen
   },
+  {
+    path: '/panel/',
+    panel: {
+
+      componentUrl: './pages/panelLeft.html'
+    }
+  },
   // Default route (404 page). MUST BE THE LAST
   {
     name: 'notfound',
     path: '(.*)',
     componentUrl: './pages/404.html',
     'data-view': 'view-main',
-  },
+  }
 ];
