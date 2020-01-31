@@ -61,7 +61,7 @@ var app = new Framework7({
       app.data['userID'] = 0;
       app.data['isAdmin'] = 0;
       app.data['loggedIn'] = false;
-      $$('#view-navbar').hide();
+      //$$('#view-navbar').hide();
     },
     //Indtil den her kommentar
 
@@ -153,7 +153,7 @@ var app = new Framework7({
 
         //Login Form to show
         if(app.data['loggedIn'] == false){
-          document.getElementById('view-navbar').style.display = "none";
+          //document.getElementById('view-navbar').style.display = "none";
           app.views.main.router.navigate("/login/", {
             reloadCurrent: true, // Sikrer at der kommer friskt data på siden
           });
