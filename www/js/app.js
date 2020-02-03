@@ -23,35 +23,6 @@ var app = new Framework7({
   },
   // App root methods
   methods: {
-    
-    // Alt det her skal ændres.
-    // popNavbar: function(){
-    //   if(app.data['isAdmin']) {
-    //     $$('#navadminaccordion').show();
-    //   }
-    //   let navbarwidth = $$('#panelLeft')[0].clientWidth;
-    //   document.getElementById('view-navbar').style.width = navbarwidth + "px";
-    //   document.getElementById('view-home').style.left = navbarwidth + "px";
-    //   $$('.usernamefield').html(app.data['firstname'] +" "+app.data['lastname']);
-    //   $$('.profilepic').attr('src', app.data['userAvatar']);
-    // },
-
-    highlightli: function(ID){
-      let navbarheader = $$('#panelLeft').find('li>a');
-      let navbarsubheader = $$('#panelLeft').find('li>div>div>a');
-      for(let i = 0; i < navbarheader.length; i++) {
-          if($$(navbarheader[i]).hasClass('active')){
-              $$(navbarheader[i]).removeClass('active');
-          }
-      }
-      for(let i = 0; i < navbarsubheader.length; i++) {
-        if($$(navbarsubheader[i]).hasClass('active')){
-            $$(navbarsubheader[i]).removeClass('active');
-        }
-    }
-
-      $$(`#${ID}`).addClass('active');
-    },
 
     logout: function(){
       app.data['firstname'] = "";
@@ -61,11 +32,8 @@ var app = new Framework7({
       app.data['userID'] = 0;
       app.data['isAdmin'] = 0;
       app.data['loggedIn'] = false;
-      //$$('#view-navbar').hide();
       $$('#fab-menu').hide();
     },
-    //Indtil den her kommentar
-
 
     statusMsg: function (statusmsg, type, headerclass) {
         let bkcolor;

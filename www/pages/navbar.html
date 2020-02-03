@@ -10,7 +10,7 @@
         </div>
         <ul>
             <li class="navright">
-                <a href="/currentDay/" id="navcurrentDay" class="active" data-view=".view-main"><span
+                <a href="/currentDay/" id="navcurrentDay"  data-view=".view-main"><span
                         class="fas fa-home aicon"></span>Dagsoversigt</a>
             </li>
             <li class="navright">
@@ -99,6 +99,12 @@
                 }
                 $$('.usernamefield').html(that.name);
                 $$('.profilepic').attr('src', app.data['userAvatar']);
+                
+                //Kode til at give den nuværende aktive route "active" klassen
+                //Dette gøres nu dynamisk baseret på det mountede route i main viewet
+                $$('a').filter(function (index, el) {
+                    return ($$(this).attr('href') == `/${app.views.main.router.currentPageEl.dataset.name}/` && !$$(this).hasClass('centerlogo'))
+                }).addClass('active');
             }
         },
     }
