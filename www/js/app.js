@@ -25,20 +25,20 @@ var app = new Framework7({
   methods: {
     
     // Alt det her skal ændres.
-    popNavbar: function(){
-      if(app.data['isAdmin']) {
-        $$('#navadminaccordion').show();
-      }
-      let navbarwidth = $$('#navbar')[0].clientWidth;
-      document.getElementById('view-navbar').style.width = navbarwidth + "px";
-      document.getElementById('view-home').style.left = navbarwidth + "px";
-      $$('.usernamefield').html(app.data['firstname'] +" "+app.data['lastname']);
-      $$('.profilepic').attr('src', app.data['userAvatar']);
-    },
+    // popNavbar: function(){
+    //   if(app.data['isAdmin']) {
+    //     $$('#navadminaccordion').show();
+    //   }
+    //   let navbarwidth = $$('#panelLeft')[0].clientWidth;
+    //   document.getElementById('view-navbar').style.width = navbarwidth + "px";
+    //   document.getElementById('view-home').style.left = navbarwidth + "px";
+    //   $$('.usernamefield').html(app.data['firstname'] +" "+app.data['lastname']);
+    //   $$('.profilepic').attr('src', app.data['userAvatar']);
+    // },
 
     highlightli: function(ID){
-      let navbarheader = $$('#navbar').find('li>a');
-      let navbarsubheader = $$('#navbar').find('li>div>div>a');
+      let navbarheader = $$('#panelLeft').find('li>a');
+      let navbarsubheader = $$('#panelLeft').find('li>div>div>a');
       for(let i = 0; i < navbarheader.length; i++) {
           if($$(navbarheader[i]).hasClass('active')){
               $$(navbarheader[i]).removeClass('active');
@@ -62,6 +62,7 @@ var app = new Framework7({
       app.data['isAdmin'] = 0;
       app.data['loggedIn'] = false;
       //$$('#view-navbar').hide();
+      $$('#fab-menu').hide();
     },
     //Indtil den her kommentar
 
@@ -173,12 +174,6 @@ var app = new Framework7({
 
         }
       },
-
-      //Panel specifik ting til eftertanke
-      panel: {
-        collapsedBreakpoint: 768,
-        visibleBreakpoint: 1024,
-      },
   });
 
 // Init/Create views
@@ -188,10 +183,9 @@ var homeView = app.views.create('#view-home', {
   main: true,
   master: true,
 });
-// Navbarview som er det view component der håndtere selve navbaren og alt hvad den gør
-var navbarView = app.views.create('#view-navbar', {
-  url: '/navbar/',
-  animate: false,
-  linksView: homeView,
-});
-
+// // Navbarview som er det view component der håndtere selve navbaren og alt hvad den gør
+// var navbarView = app.views.create('#view-navbar', {
+//   url: '/navbar/',
+//   animate: false,
+//   linksView: homeView,
+// });
