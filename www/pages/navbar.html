@@ -1,51 +1,64 @@
 <template>
-    <div class="page" data-name="navbar" id ="navbar">
+    <div class="page" data-name="navbar" id="navbar">
         <div class="navlogo">
-            <a class="centerlogo" href="/currentDay/"><img class="centerlogo" src="../images/logo.png" data-view=".view-main"></a>
+            <a class="centerlogo" href="/currentDay/" data-view=".view-main"><img class="centerlogo"
+                    src="../images/logo.png"></a>
         </div>
         <div class="profilearea">
             <img class="profilepic" src="">
             <span class="usernamefield"></span>
-        </div>     
+        </div>
         <ul>
             <li class="navright">
-                <a href="/currentDay/" id="navcurrentDay" class="active" data-view=".view-main"><span class="fas fa-home aicon" ></span>Dagsoversigt</a>
+                <a href="/currentDay/" id="navcurrentDay" class="active" data-view=".view-main"><span
+                        class="fas fa-home aicon"></span>Dagsoversigt</a>
             </li>
             <li class="navright">
-                <a href="/overview/" id="navoverview" data-view=".view-main"><span class="fas fa-history aicon"></span>Årsoversigt</a>
+                <a href="/overview/" id="navoverview" data-view=".view-main"><span
+                        class="fas fa-history aicon"></span>Årsoversigt</a>
             </li>
             <li class="navright">
-                <a href="/editprofile/" id="naveditprofile" data-view=".view-main"><span class="fas fa-cogs aicon"></span>Profil</a>
+                <a href="/editprofile/" id="naveditprofile" data-view=".view-main"><span
+                        class="fas fa-cogs aicon"></span>Profil</a>
             </li>
             <li class="navright">
-                <a href="/groupoverview/" id="navgroupoverview" data-view=".view-main"><span class="fas fa-users aicon"></span>Lokaleoversigt</a>
+                <a href="/groupoverview/" id="navgroupoverview" data-view=".view-main"><span
+                        class="fas fa-users aicon"></span>Lokaleoversigt</a>
             </li>
-            <li class="navright accordion-item" id="navadminaccordion" style="display:none"> 
-                    <a href="#" id="navtimemain" class="item-content item-link">
-                        <div class="item-inner">
-                            <div class="item-title"><span class="fas fa-user-cog aicon"></span>Administrator<span class="fas fa-chevron-right aicon dropboi" style="float:right;margin-top:5px;"></span></div>
-                        </div>
-                    </a>
-                    <div class="accordion-item-content" style="color: white">
-                        <div class="block">
-                            <a href="/createuser/" id="navcreateuser" data-view=".view-main"><span class="fas fa-user-plus aicon"></span>Opret bruger</a>
-                        </div>
-                        <div class="block">
-                                <a href="/createusergroup/" id="navcreateusergroup" data-view=".view-main"><span class="fas fa-users-cog aicon"></span>Opret lokale/område</a>
-                        </div>
-                        <div class="block">
-                                <a href="/createscanner/" id="navcreatescanner" data-view=".view-main"><span class="far fa-hdd aicon"></span>Opret scanner</a>
-                        </div>
-                        <div class="block">
-                            <a href="/usergrouplist/" id="navuserlist" data-view=".view-main"><span class="fas fa-list-ul aicon"></span>Bruger liste</a>
-                        </div>
-                        <div class="block">
-                                <a href="/unknowncardlist/" id="navunknowncardlist" data-view=".view-main"><span class="far fa-address-card aicon"></span>Ukendte kort liste</a>
+            <li class="navright accordion-item" id="navadminaccordion" style="display:none">
+                <a href="#" id="navtimemain" class="item-content item-link">
+                    <div class="item-inner">
+                        <div class="item-title"><span class="fas fa-user-cog aicon"></span>Administrator<span
+                                class="fas fa-chevron-right aicon dropboi" style="float:right;margin-top:5px;"></span>
                         </div>
                     </div>
-                </li>
+                </a>
+                <div class="accordion-item-content" style="color: white">
+                    <div class="block">
+                        <a href="/createuser/" id="navcreateuser" data-view=".view-main"><span
+                                class="fas fa-user-plus aicon"></span>Opret bruger</a>
+                    </div>
+                    <div class="block">
+                        <a href="/createusergroup/" id="navcreateusergroup" data-view=".view-main"><span
+                                class="fas fa-users-cog aicon"></span>Opret lokale/område</a>
+                    </div>
+                    <div class="block">
+                        <a href="/createscanner/" id="navcreatescanner" data-view=".view-main"><span
+                                class="far fa-hdd aicon"></span>Opret scanner</a>
+                    </div>
+                    <div class="block">
+                        <a href="/usergrouplist/" id="navuserlist" data-view=".view-main"><span
+                                class="fas fa-list-ul aicon"></span>Bruger liste</a>
+                    </div>
+                    <div class="block">
+                        <a href="/unknowncardlist/" id="navunknowncardlist" data-view=".view-main"><span
+                                class="far fa-address-card aicon"></span>Ukendte kort liste</a>
+                    </div>
+                </div>
+            </li>
             <li class="navright">
-                <a href="/login/" id="navsignout" data-view=".view-main"><span class="fas fa-sign-out-alt aicon"></span>Log ud</a>
+                <a href="/login/" id="navsignout" data-view=".view-main"><span
+                        class="fas fa-sign-out-alt aicon"></span>Log ud</a>
             </li>
         </ul>
     </div>
@@ -59,35 +72,34 @@
          */
         data: function () {
             return {
+                name,
             };
         },
 
         // Framework7 Component Methods
         methods: {
+            toggleChevron(el) {
+                el.toggleClass("fa-chevron-right");
+                el.toggleClass("fa-chevron-down");
+            }
         },
         on: {
-            //pageMounted trigger når siden bliver insat i DOMen
+            //pageMounted trigger når siden bliver indsat i DOMen
             pageMounted: function (page) {
+                const that = this;
+                that.name = (app.data['firstname'] + " " + app.data['lastname']);
                 app.on('accordionOpen', function (el) {
-                    let element = $$(el).find('.dropboi');
-                    if(element.hasClass('fa-chevron-right')){
-                        element.removeClass('fa-chevron-right');
-                        element.addClass('fa-chevron-down');
-                    }
+                    that.toggleChevron($$(el).find('.dropboi'));
                 });
                 app.on('accordionClose', function (el) {
-                    let element = $$(el).find('.dropboi');
-                    if(element.hasClass('fa-chevron-down')){
-                        element.removeClass('fa-chevron-down');
-                        element.addClass('fa-chevron-right');
-                    }
+                    that.toggleChevron($$(el).find('.dropboi'));
                 });
-                if(app.data['isAdmin']) {
+                if (app.data['isAdmin']) {
                     $$('#navadminaccordion').show();
                 }
-                $$('.usernamefield').html(app.data['firstname'] +" "+app.data['lastname']);
+                $$('.usernamefield').html(that.name);
                 $$('.profilepic').attr('src', app.data['userAvatar']);
-            },
+            }
         },
     }
 
