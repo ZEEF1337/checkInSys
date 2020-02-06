@@ -695,3 +695,13 @@ hr{
   color: whitesmoke;
   padding: 12px;
 }
+
+.editrow{
+  text-align: center;
+}
+.editrow input{
+  display: inline-block;
+  width: 45px;
+  text-align: center;
+  background-color: lightgray;
+}
