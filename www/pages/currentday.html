@@ -41,58 +41,58 @@
                     if (response.result == 1) {
                         $$('.currentWeek').html(response.currentWeek);
                         let innerHTML = "";
-                        Object.keys(response.records[0]).map((key, index)=>{
-                            if(response.records[0][key]){
+                        Object.keys(response.records[0]).map((key, index) => {
+                            if (response.records[0][key]) {
                                 let checkin = moment(response.records[0][key].in, "LTS");
                                 let event;
-                                if(key == "Friday"){
+                                if (key == "Friday") {
                                     event = checkin.add(5, 'hours').unix();
-                                }else{
+                                } else {
                                     event = checkin.add(8, 'hours').unix();
                                 }
                                 let currentTime;
-                                
-                                if(response.records[0][key].out != ""){
+
+                                if (response.records[0][key].out != "") {
                                     currentTime = moment(response.records[0][key].out, "LTS").unix();
-                                }else{
+                                } else {
                                     currentTime = moment().unix();
                                 }
-                                
+
                                 let diffTime = event - currentTime;
                                 let duration = moment.duration(diffTime * 1000, 'milliseconds');
                                 let hours = moment.duration(duration).hours().toString();
                                 let min = moment.duration(duration).minutes().toString();
-                                if(hours.length == 1) hours = '0'+hours;
-                                if(min.length == 1) min = '0'+min;
-                                if(hours <= 0)hours = "00";
-                                if(min <= 0)min = "00";
-                    
-                                if(key == response.currentDay && response.records[0][key].out == ""){
-                                    timer = setInterval(function(){
+                                if (hours.length == 1) hours = '0' + hours;
+                                if (min.length == 1) min = '0' + min;
+                                if (hours <= 0) hours = "00";
+                                if (min <= 0) min = "00";
+
+                                if (key == response.currentDay && response.records[0][key].out == "") {
+                                    timer = setInterval(function () {
                                         currentTime = moment().unix();
                                         diffTime = event - currentTime;
                                         duration = moment.duration(diffTime * 1000, 'milliseconds');
                                         hours = moment.duration(duration).hours().toString();
                                         min = moment.duration(duration).minutes().toString();
-                                        if(hours.length == 1) hours = '0'+hours;
-                                        if(min.length == 1) min = '0'+min;
-                                        $$('.currDay').html(hours+":"+min);
+                                        if (hours.length == 1) hours = '0' + hours;
+                                        if (min.length == 1) min = '0' + min;
+                                        $$('.currDay').html(hours + ":" + min);
                                     }, 1000);
                                 }
 
                                 let test = response.records[0][key].in - response.records[0][key].out;
                                 innerHTML +=
-                                `
+                                    `
                                 <tr>
                                     <td style="text-align:center;">${key}</td>
                                     <td style="text-align:center;">${response.records[0][key].in}</td>
                                     <td style="text-align:center;">${response.records[0][key].out}</td>
-                                    <td style="text-align:center;"${key==response.currentDay ? 'class="currDay"': ""}>${hours+":"+min}</td>
+                                    <td style="text-align:center;"${key == response.currentDay ? 'class="currDay"' : ""}>${hours + ":" + min}</td>
                                 </tr>
                                 `;
-                            }else{
+                            } else {
                                 innerHTML +=
-                                `
+                                    `
                                 <tr>
                                     <td style="text-align:center;">${key}</td>
                                     <td style="text-align:center;"> </td>

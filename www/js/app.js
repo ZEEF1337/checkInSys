@@ -11,46 +11,18 @@ var app = new Framework7({
   // App root data
   data: function () {
     return {
-      firstname: "",
-      lastname: "",
+      firstname: "Jimmie",
+      lastname: "Andersen",
       userAvatar: "../images/default.png",
-      userID: 0,
+      userID: 6,
       userEmail: "",
-      isAdmin: 0,
-      loggedIn: false,
-      serverIP: "https://192.168.195.65/checkIn/",
+      isAdmin: 1,
+      loggedIn: true,
+      serverIP: "http://192.168.0.200/checkIn/",
     };
   },
   // App root methods
   methods: {
-    
-    popNavbar: function(){
-      if(app.data['isAdmin']) {
-        $$('#navadminaccordion').show();
-      }
-      let navbarwidth = $$('#navbar')[0].clientWidth;
-      document.getElementById('view-navbar').style.width = navbarwidth + "px";
-      document.getElementById('view-home').style.left = navbarwidth + "px";
-      $$('.usernamefield').html(app.data['firstname'] +" "+app.data['lastname']);
-      $$('.profilepic').attr('src', app.data['userAvatar']);
-    },
-
-    highlightli: function(ID){
-      let navbarheader = $$('#navbar').find('li>a');
-      let navbarsubheader = $$('#navbar').find('li>div>div>a');
-      for(let i = 0; i < navbarheader.length; i++) {
-          if($$(navbarheader[i]).hasClass('active')){
-              $$(navbarheader[i]).removeClass('active');
-          }
-      }
-      for(let i = 0; i < navbarsubheader.length; i++) {
-        if($$(navbarsubheader[i]).hasClass('active')){
-            $$(navbarsubheader[i]).removeClass('active');
-        }
-    }
-
-      $$(`#${ID}`).addClass('active');
-    },
 
     logout: function(){
       app.data['firstname'] = "";
@@ -60,7 +32,7 @@ var app = new Framework7({
       app.data['userID'] = 0;
       app.data['isAdmin'] = 0;
       app.data['loggedIn'] = false;
-      $$('#view-navbar').hide();
+      $$('#fab-menu').hide();
     },
 
     statusMsg: function (statusmsg, type, headerclass) {
@@ -150,7 +122,7 @@ var app = new Framework7({
 
         //Login Form to show
         if(app.data['loggedIn'] == false){
-          document.getElementById('view-navbar').style.display = "none";
+          //document.getElementById('view-navbar').style.display = "none";
           app.views.main.router.navigate("/login/", {
             reloadCurrent: true, // Sikrer at der kommer friskt data på siden
           });
@@ -158,6 +130,7 @@ var app = new Framework7({
         }
 
         // Dette er for at sikre os at den første side der bliver indlæst af systemet, er udlon siden
+        //#BringNibeBack
         let currentpage = app.views.main.router.currentPageEl.dataset.name;
         if (currentpage == "home") {
           app.views.main.router.navigate("/currentDay/", {
@@ -166,9 +139,7 @@ var app = new Framework7({
         };
         },
         pageAfterIn: function (page){
-          setTimeout(function () {
-            app.methods.popNavbar();
-          },25);
+
         }
       },
   });
@@ -180,9 +151,9 @@ var homeView = app.views.create('#view-home', {
   main: true,
   master: true,
 });
-// Navbarview som er det view component der håndtere selve navbaren og alt hvad den gør
-var navbarView = app.views.create('#view-navbar', {
-  url: '/navbar/',
-  animate: false,
-  linksView: homeView,
-});
+// // Navbarview som er det view component der håndtere selve navbaren og alt hvad den gør
+// var navbarView = app.views.create('#view-navbar', {
+//   url: '/navbar/',
+//   animate: false,
+//   linksView: homeView,
+// });

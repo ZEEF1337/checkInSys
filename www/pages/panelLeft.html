@@ -1,0 +1,31 @@
+<template>
+    <div class="panel panel-left panel-cover panel-init" data-name="panelLeft" id ="panelLeft" 
+    data-collapsed-breakpoint="768"
+    data-visible-breakpoint="1024"
+    data-swipe="false">
+        <div class="view panel-view" data-name="nav">
+            
+        </div>
+    </div>
+</template>
+
+<script>
+    return {
+
+        /**
+         * Det datasæt som framework bruger internt i dette view, de kan ikke tilgås udefra.
+         */
+        data: function () {
+            return {
+            };
+        },
+        mounted:  function() {
+            var app = this.$app;
+            app.views.create(this.$el.find('.view'), {
+                url: '/navbar/'
+            })
+        }
+    }
+
+
+</script>

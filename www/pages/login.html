@@ -49,9 +49,7 @@
                             app.data['loggedIn'] = 1;
                             
                             setTimeout(function () { 
-                                app.methods.popNavbar();
-                                $$('#view-navbar').show();
-                                $$(`#navhome`).addClass('active');
+                                $$('#fab-menu').show();
                                 app.views.main.router.navigate("/currentDay/", { reloadCurrent: true, }) 
                             }, 1000);
                         }
