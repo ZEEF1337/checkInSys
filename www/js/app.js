@@ -129,6 +129,10 @@ var app = new Framework7({
           return;
         }
 
+        /**
+         * Jeg forstår ikke rigtig hvorfor denne er nødvendig, 
+         * da der på login siden allerede bliver lavet et redirect til currentDay og ikke home
+         */
         // Dette er for at sikre os at den første side der bliver indlæst af systemet, er udlon siden
         //#BringNibeBack
         let currentpage = app.views.main.router.currentPageEl.dataset.name;
@@ -150,6 +154,11 @@ var homeView = app.views.create('#view-home', {
   animate: false,
   main: true,
   master: true,
+  reloadDetail:true,
+  reloadPages: true,
+  pushState: true,
+  pushStateOnLoad: false,
+  componentCache: false,
 });
 // // Navbarview som er det view component der håndtere selve navbaren og alt hvad den gør
 // var navbarView = app.views.create('#view-navbar', {
