@@ -10,7 +10,7 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 $userID = $_GET['userID'];
-$userGroup = $_GET['groupID']
+$userGroup = $_GET['groupID'];
 
 $query = "SELECT * FROM usergroups WHERE ID = $userGroup;";
 
