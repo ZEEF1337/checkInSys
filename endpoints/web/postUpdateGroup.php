@@ -9,7 +9,7 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 
-if(!isset($_POST['Area']) || !isset($_POST['Instructor']) || !isset($_POST['groupID']) || !isset($_POST['userID']){
+if(!isset($_POST['Area']) || !isset($_POST['Instructor']) || !isset($_POST['groupID']) || !isset($_POST['userID'])){
     $out['result'] = 0;
     $out['message'] = "Missing param";
     $json = json_encode($out);
