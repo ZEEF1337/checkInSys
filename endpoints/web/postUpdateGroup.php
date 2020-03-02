@@ -36,7 +36,7 @@ $database = new Database();
 $db = $database->getConnection();
 
 
-$query = "UPDATE usergroups SET Area = '$Area', Instructor = '$Instructor',";
+$query = "UPDATE usergroups SET Area = '$Area', Instructor = '$Instructor'";
 $query .= " WHERE ID = $groupID";
 $stmt = $db->prepare($query);
 
