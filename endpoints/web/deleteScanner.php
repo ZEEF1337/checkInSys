@@ -9,24 +9,20 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 
-if(!isset($_POST['Area']) || !isset($_POST['Instructor']) || !isset($_POST['groupID']) || !isset($_POST['userID']){
+if(!isset($_GET['scannerID']) || !isset($_GET['userID'])){
     $out['result'] = 0;
-    $out['message'] = "Missing param";
     $json = json_encode($out);
     print_r($json);
     return;
 }
 
-$Area = $_POST['Area'];
-$Instructor = $_POST['Instructor'];
-$userID = $_POST['userID'];
-$groupID = $_POST['groupID'];
+$scannerID = $_GET['scannerID'];
+$userID = $_GET['userID'];
 
 $adminCheck = checkIfAdmin($userID);
 
 if($adminCheck == 0){
     $out['result'] = 0;
-    $out['message'] = "No access";
     $json = json_encode($out);
     print_r($json);
     return;
@@ -35,16 +31,14 @@ if($adminCheck == 0){
 $database = new Database();
 $db = $database->getConnection();
 
+date_default_timezone_set('Europe/Copenhagen');
 
-$query = "UPDATE usergroups SET Area = '$Area', Instructor = '$Instructor'";
-$query .= " WHERE ID = $groupID";
+$query = "DELETE FROM scanners WHERE ID = '$scannerID'";
 $stmt = $db->prepare($query);
 
 try{
     $stmt->execute();
     $out['result'] = 1;
-    $out['message'] = "Gruppen blev opdateret.";
-    
 } catch(PDOException $e){
     print_r($e);
     return;

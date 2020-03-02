@@ -9,7 +9,7 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 
-if(!isset($_POST['Area']) || !isset($_POST['Instructor']) || !isset($_POST['groupID']) || !isset($_POST['userID']){
+if(!isset($_POST['userID']) || !isset($_POST['scannerName']) || !isset($_POST['scannerID'])){
     $out['result'] = 0;
     $out['message'] = "Missing param";
     $json = json_encode($out);
@@ -17,10 +17,9 @@ if(!isset($_POST['Area']) || !isset($_POST['Instructor']) || !isset($_POST['grou
     return;
 }
 
-$Area = $_POST['Area'];
-$Instructor = $_POST['Instructor'];
+$ScannerName = $_POST['scannerName'];
+$ScannerID = $_POST['scannerID'];
 $userID = $_POST['userID'];
-$groupID = $_POST['groupID'];
 
 $adminCheck = checkIfAdmin($userID);
 
@@ -35,15 +34,14 @@ if($adminCheck == 0){
 $database = new Database();
 $db = $database->getConnection();
 
-
-$query = "UPDATE usergroups SET Area = '$Area', Instructor = '$Instructor'";
-$query .= " WHERE ID = $groupID";
+$query = "UPDATE scanners SET Name = '$ScannerName'";
+$query .= " WHERE ID = $ScannerID";
 $stmt = $db->prepare($query);
 
 try{
     $stmt->execute();
     $out['result'] = 1;
-    $out['message'] = "Gruppen blev opdateret.";
+    $out['message'] = "Scanneren blev opdateret.";
     
 } catch(PDOException $e){
     print_r($e);
