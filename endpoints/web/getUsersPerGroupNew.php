@@ -28,7 +28,7 @@ $year = $date->format('Y');
 $weekday = $date->format('l');
 
 $query = "SELECT Firstname, Lastname, isInstructor, Email, CardID, users.ID as userID, Area, Instructor FROM users ";
-$query .= "INNER JOIN usergroups as ug ON ug.ID = users.Usergroup WHERE users.Usergroup = 1;";
+$query .= "INNER JOIN usergroups as ug ON ug.ID = users.Usergroup WHERE users.Usergroup = $groupID;";
 $stmt = $db->prepare($query);
 
 try{

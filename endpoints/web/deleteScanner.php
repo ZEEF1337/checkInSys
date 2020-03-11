@@ -11,6 +11,7 @@ include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 
 if(!isset($_GET['scannerID']) || !isset($_GET['userID'])){
     $out['result'] = 0;
+    $out['message'] = "Missing Param";
     $json = json_encode($out);
     print_r($json);
     return;
@@ -23,6 +24,7 @@ $adminCheck = checkIfAdmin($userID);
 
 if($adminCheck == 0){
     $out['result'] = 0;
+    $out['message'] = 'Access Denied';
     $json = json_encode($out);
     print_r($json);
     return;
@@ -39,6 +41,7 @@ $stmt = $db->prepare($query);
 try{
     $stmt->execute();
     $out['result'] = 1;
+    $out['message'] = 'Scanner Slettet';
 } catch(PDOException $e){
     print_r($e);
     return;
