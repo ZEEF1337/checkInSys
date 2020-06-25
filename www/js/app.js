@@ -18,6 +18,7 @@ var app = new Framework7({
       userEmail: "",
       isAdmin: 1,
       loggedIn: true,
+      token: 0,
       serverIP: "http://192.168.0.200/checkIn/",
     };
   },
@@ -32,6 +33,7 @@ var app = new Framework7({
       app.data['userID'] = 0;
       app.data['isAdmin'] = 0;
       app.data['loggedIn'] = false;
+      app.data['token'] = 0;
       $$('#fab-menu').hide();
     },
 

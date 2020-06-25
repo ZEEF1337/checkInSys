@@ -47,6 +47,7 @@
                             app.data['userID'] = response.userID;
                             app.data['isAdmin'] = response.isAdmin;
                             app.data['loggedIn'] = 1;
+                            app.data['token'] = response.token;
                             
                             setTimeout(function () { 
                                 $$('#fab-menu').show();

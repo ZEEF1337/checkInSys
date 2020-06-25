@@ -108,7 +108,7 @@
                 });
             },
             fillDropDown: function () {
-                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getAreas.php?userID=${app.data['userID']}`, {}, function (response) {
+                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getAreas.php?userID=${app.data['userID']}&token=${app.data['token']}`, {}, function (response) {
                     if (response.result == 1) {
                         let innerHTML = "";
                         Object.keys(response.records).forEach((key, index) => {
@@ -168,6 +168,7 @@
                     cardID: cardID,
                     isAdmin: isAdmin,
                     userID: app.data['userID'],
+                    token: app.data['token'],
                     isInstructor: isInstructor,
                 }, function (response) {
                     if (response.result == 0) {

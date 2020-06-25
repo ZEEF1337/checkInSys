@@ -122,7 +122,7 @@
                     checkBoxObj.forEach(element => {
                         if (element.checked) {
                             element.parentElement.parentElement.remove();
-                            app.request.getJSON(`${app.data['serverIP']}endpoints/web/deleteUser.php?deleteUserID=${element.value}&userID=${app.data['userID']}`, (data) => {}, function (e, e2) { });
+                            app.request.getJSON(`${app.data['serverIP']}endpoints/web/deleteUser.php?deleteUserID=${element.value}&userID=${app.data['userID']}&token=${app.data['token']}`, (data) => {}, function (e, e2) { });
                         }
                     });
                 })

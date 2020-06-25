@@ -44,6 +44,7 @@
                     area: area,
                     instructor: instructor,
                     userID: app.data['userID'],
+                    token: app.data['token'],
                 }, function (response) {
                     if (response.result == 0) {
                         app.methods.statusMsg(response.message, "error", ".opretBrugerGruppe");
