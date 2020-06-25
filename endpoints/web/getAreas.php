@@ -9,10 +9,20 @@ header("Content-Type: application/json; charset=UTF-8");
 
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
+
+if(!isset($_GET['userID']) || !isset($_GET['token'])){
+    $out['result'] = 0;
+    $out['message'] = 'Missing Param';
+    $json = json_encode($out);
+    print_r($json);
+    return;
+}
+
 $userID = $_GET['userID'];
 $userGroup = getUserGroupFromUserID($userID);
+$token = $_GET['token'];
 
-if(checkIfAdmin($userID) == 1){
+if(checkIfAdmin($token) == 1){
     $query = "SELECT * FROM usergroups;";
 }else{
     $query = "SELECT * FROM usergroups WHERE ID = $userGroup;";

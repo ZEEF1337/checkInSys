@@ -9,7 +9,7 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 
-if(!isset($_POST['email']) || !isset($_POST['userID']) || !isset($_POST['updateUserID']) || !isset($_POST['firstName']) || !isset($_POST['lastName']) || !isset($_POST['userGroup']) || !isset($_POST['cardID']) || !isset($_POST['isAdmin']) || !isset($_POST['isInstructor'])){
+if(!isset($_POST['email']) || !isset($_POST['userID']) || !isset($_POST['updateUserID']) || !isset($_POST['firstName']) || !isset($_POST['lastName']) || !isset($_POST['userGroup']) || !isset($_POST['cardID']) || !isset($_POST['isAdmin']) || !isset($_POST['isInstructor']) || !isset($_POST['token'])){
     $out['result'] = 0;
     $out['message'] = "Missing param";
     $json = json_encode($out);
@@ -26,8 +26,9 @@ $givenIsAdmin = $_POST['isAdmin'];
 $givenIsInstructor = $_POST['isInstructor'];
 $givenUserID = $_POST['updateUserID'];
 $userID = $_POST['userID'];
+$token = $_POST['token'];
 
-$adminCheck = checkIfAdmin($userID);
+$adminCheck = checkIfAdmin($token);
 
 if($adminCheck == 0){
     $out['result'] = 0;

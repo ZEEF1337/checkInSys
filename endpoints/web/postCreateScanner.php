@@ -9,7 +9,7 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 
-if(!isset($_POST['MAC']) || !isset($_POST['userID']) || !isset($_POST['name'])){
+if(!isset($_POST['MAC']) || !isset($_POST['userID']) || !isset($_POST['name']) || !isset($_POST['token'])){
     $out['result'] = 0;
     $out['message'] = "Missing param";
     $json = json_encode($out);
@@ -20,8 +20,9 @@ if(!isset($_POST['MAC']) || !isset($_POST['userID']) || !isset($_POST['name'])){
 $givenName = $_POST['name'];
 $givenMAC = $_POST['MAC'];
 $userID = $_POST['userID'];
+$token = $_POST['token'];
 
-$adminCheck = checkIfAdmin($userID);
+$adminCheck = checkIfAdmin($token);
 
 if($adminCheck == 0){
     $out['result'] = 0;

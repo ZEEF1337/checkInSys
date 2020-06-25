@@ -225,18 +225,19 @@ function getScannerIDFromScannerMAC($scannerMAC){
     }
 }
 
-function checkIfAdmin($userID){
+function checkIfAdmin($token){
     $database = new Database();
     $db = $database->getConnection();
-    $query = "SELECT isAdmin FROM users WHERE ID = '$userID'";
+    $query = "SELECT AuthToken FROM users WHERE AuthToken = '$token'";
     $stmt = $db->prepare($query);
     try{
         $stmt->execute();
         $num = $stmt->rowCount();
         if($num>0){
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            extract($row);
-            return $isAdmin;
+            return 1;
+        }
+        else{
+            return 0;
         }
     } catch(PDOException $e){
         return($e);
@@ -288,4 +289,50 @@ function getNames($email){
         return($e);
     }
 }
+
+function generateToken($username) {
+    $database = new Database();
+    $db = $database->getConnection();
+    $len = 12;
+    $char = '0123456789'.crc32($username);
+    $charLen = strlen($char);
+    $tokenInUse = 1;
+    try{
+        while($tokenInUse){
+            $token = '';
+            for ($i = 0; $i < $len; $i++) {
+                $token .= $char[rand(0, $charLen - 1)];
+            }
+            $token = hash('sha1', $token);
+            $query = "SELECT AuthToken FROM users WHERE AuthToken = '$token'";
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            $num = $stmt->rowCount();
+            if($num>0){
+                $tokenInUse = 1;
+            }else{
+                $tokenInUse = 0;
+            }
+        }
+        insertAuthToken($username, $token);
+        return $token;
+    } catch(PDOException $e){
+        return($e);
+    }
+}
+
+function insertAuthToken($username, $token){
+    $database = new Database();
+    $db = $database->getConnection();
+    $query = "UPDATE users SET AuthToken='$token' WHERE Brugernavn = '$username'";
+    $stmt = $db->prepare($query);
+    try{
+        $stmt->execute();
+        return true;
+    } catch(PDOException $e){
+        return($e);
+    }
+}
+
+
 ?>

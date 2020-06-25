@@ -9,7 +9,7 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
 include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
 
-if(!isset($_GET['cardID']) || !isset($_GET['userID'])){
+if(!isset($_GET['cardID']) || !isset($_GET['userID']) || !isset($_GET['token'])){
     $out['result'] = 0;
     $json = json_encode($out);
     print_r($json);
@@ -18,8 +18,9 @@ if(!isset($_GET['cardID']) || !isset($_GET['userID'])){
 
 $cardID = $_GET['cardID'];
 $userID = $_GET['userID'];
+$token = $_GET['token'];
 
-$adminCheck = checkIfAdmin($userID);
+$adminCheck = checkIfAdmin($token);
 
 if($adminCheck == 0){
     $out['result'] = 0;
