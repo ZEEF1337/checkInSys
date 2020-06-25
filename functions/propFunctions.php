@@ -228,13 +228,15 @@ function getScannerIDFromScannerMAC($scannerMAC){
 function checkIfAdmin($token){
     $database = new Database();
     $db = $database->getConnection();
-    $query = "SELECT AuthToken FROM users WHERE AuthToken = '$token'";
+    $query = "SELECT AuthToken, isAdmin FROM users WHERE AuthToken = '$token'";
     $stmt = $db->prepare($query);
     try{
         $stmt->execute();
         $num = $stmt->rowCount();
         if($num>0){
-            return 1;
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            extract($row);
+            return $isAdmin;
         }
         else{
             return 0;
