@@ -6,8 +6,8 @@ header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Ca
 header("Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS, DELETE");
 header("Content-Type: application/json; charset=UTF-8");
 
-include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
-include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
+include_once ($_SERVER['DOCUMENT_ROOT']."/endpoint/functions/propFunctions.php");
+include_once ($_SERVER['DOCUMENT_ROOT']."/endpoint/database.inc");
 
 if(!isset($_GET['deleteUserID']) || !isset($_GET['userID']) || !isset($_GET['token'])){
     $out['result'] = 0;
@@ -20,7 +20,7 @@ $deleteUserID = $_GET['deleteUserID'];
 $userID = $_GET['userID'];
 $token = $_GET['token'];
 
-$adminCheck = checkIfAdmin($token);
+$adminCheck = checkIfAdminNew($token);
 
 if($adminCheck == 0){
     $out['result'] = 0;

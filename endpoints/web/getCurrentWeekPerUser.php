@@ -6,11 +6,12 @@ header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Ca
 header("Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS, DELETE");
 header("Content-Type: application/json; charset=UTF-8");
 
-include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
+include_once ($_SERVER['DOCUMENT_ROOT']."/endpoint/functions/propFunctions.php");
+include_once ($_SERVER['DOCUMENT_ROOT']."/endpoint/database.inc");
 
 
 
-if(!isset($_GET['userID'])){
+if(!isset($_GET['userID']) || !isset($_GET['token'])){
     $out['result'] = 0;
     $json = json_encode($out);
     print_r($json);
@@ -18,6 +19,21 @@ if(!isset($_GET['userID'])){
 }
 
 $userID = $_GET['userID'];
+$token = $_GET['token'];
+
+
+$validUser = checkUserCall($userID, $token);
+$adminCheck = checkIfAdminNew($token);
+
+if($adminCheck == 0){
+    if($validUser == 0){
+        $out['result'] = 0;
+        $json = json_encode($out);
+        print_r($json);
+        return;
+    }
+}
+
 
 
 $database = new Database();
@@ -40,6 +56,7 @@ try{
     if($num > 0){
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
+            
             $temp = array(
                 "Monday" => json_decode($Monday),
                 "Tuesday" => json_decode($Tuesday),

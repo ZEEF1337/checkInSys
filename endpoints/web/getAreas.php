@@ -7,8 +7,8 @@ header("Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS, DELETE");
 header("Content-Type: application/json; charset=UTF-8");
 
 
-include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
-include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
+include_once ($_SERVER['DOCUMENT_ROOT']."/endpoint/functions/propFunctions.php");
+include_once ($_SERVER['DOCUMENT_ROOT']."/endpoint/database.inc");
 
 if(!isset($_GET['userID']) || !isset($_GET['token'])){
     $out['result'] = 0;
@@ -22,7 +22,7 @@ $userID = $_GET['userID'];
 $userGroup = getUserGroupFromUserID($userID);
 $token = $_GET['token'];
 
-if(checkIfAdmin($token) == 1){
+if(checkIfAdminNew($token) == 1){
     $query = "SELECT * FROM usergroups;";
 }else{
     $query = "SELECT * FROM usergroups WHERE ID = $userGroup;";

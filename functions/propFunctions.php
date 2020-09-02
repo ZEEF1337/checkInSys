@@ -1,5 +1,5 @@
 <?php
-include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
+include_once ($_SERVER['DOCUMENT_ROOT']."/endpoint/database.inc");
 
 function generateRandomSalt($len) {
     $database = new Database();
@@ -225,7 +225,25 @@ function getScannerIDFromScannerMAC($scannerMAC){
     }
 }
 
-function checkIfAdmin($token){
+function checkIfAdmin($userID){
+    $database = new Database();
+    $db = $database->getConnection();
+    $query = "SELECT isAdmin FROM users WHERE ID = '$userID'";
+    $stmt = $db->prepare($query);
+    try{
+        $stmt->execute();
+        $num = $stmt->rowCount();
+        if($num>0){
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            extract($row);
+            return $isAdmin;
+        }
+    } catch(PDOException $e){
+        return($e);
+    }
+}
+
+function checkIfAdminNew($token){
     $database = new Database();
     $db = $database->getConnection();
     $query = "SELECT AuthToken, isAdmin FROM users WHERE AuthToken = '$token'";
@@ -292,11 +310,12 @@ function getNames($email){
     }
 }
 
-function generateToken($username) {
+
+function generateToken($email) {
     $database = new Database();
     $db = $database->getConnection();
     $len = 12;
-    $char = '0123456789'.crc32($username);
+    $char = '0123456789'.crc32($email);
     $charLen = strlen($char);
     $tokenInUse = 1;
     try{
@@ -316,17 +335,17 @@ function generateToken($username) {
                 $tokenInUse = 0;
             }
         }
-        insertAuthToken($username, $token);
+        insertAuthToken($email, $token);
         return $token;
     } catch(PDOException $e){
         return($e);
     }
 }
 
-function insertAuthToken($username, $token){
+function insertAuthToken($email, $token){
     $database = new Database();
     $db = $database->getConnection();
-    $query = "UPDATE users SET AuthToken='$token' WHERE Brugernavn = '$username'";
+    $query = "UPDATE users SET AuthToken='$token' WHERE Email = '$email'";
     $stmt = $db->prepare($query);
     try{
         $stmt->execute();
@@ -337,4 +356,22 @@ function insertAuthToken($username, $token){
 }
 
 
+function checkUserCall($userID, $token){
+    $database = new Database();
+    $db = $database->getConnection();
+    $query = "SELECT AuthToken, ID FROM users WHERE AuthToken = '$token' && ID = $userID";
+    $stmt = $db->prepare($query);
+    try{
+        $stmt->execute();
+        $num = $stmt->rowCount();
+        if($num>0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    } catch(PDOException $e){
+        return($e);
+    }
+}
 ?>

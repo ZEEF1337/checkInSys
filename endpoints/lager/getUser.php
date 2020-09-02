@@ -6,7 +6,7 @@ header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Ca
 header("Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS, DELETE");
 header("Content-Type: application/json; charset=UTF-8");
 
-include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
+include_once ($_SERVER['DOCUMENT_ROOT']."/endpoint/database.inc");
 
 if(!isset($_GET['userID'])){
     $out['result'] = 0;

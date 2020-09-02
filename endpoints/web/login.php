@@ -7,8 +7,8 @@ header("Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS, DELETE");
 header("Content-Type: application/json; charset=UTF-8");
 
 
-include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/functions/propFunctions.php");
-include_once ($_SERVER['DOCUMENT_ROOT']."/checkIn/database.inc");
+include_once ($_SERVER['DOCUMENT_ROOT']."/endpoint/functions/propFunctions.php");
+include_once ($_SERVER['DOCUMENT_ROOT']."/endpoint/database.inc");
 
 $email = $_POST['email'];
 $cleanpass = $_POST['password'];
@@ -17,7 +17,7 @@ $cleanpass = $_POST['password'];
 $login = verifyPass($email, $cleanpass);
 $userID = getUserIDFromEmail($email);
 $token = generateToken($email);
-$adminCheck = checkIfAdmin($token);
+$adminCheck = checkIfAdminNew($token);
 $getNames = getNames($email);
 
 if($login == 1){
