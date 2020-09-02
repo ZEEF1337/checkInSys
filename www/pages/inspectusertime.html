@@ -67,7 +67,7 @@
             // Framework7 Component Methods
             methods: {
                 fillTable: function () {
-                    app.request.getJSON(`${app.data['serverIP']}endpoints/web/getAllWeeksPerUser.php?userID=${inspectedUser}&year=${currentYear}`, {}, function (response) {
+                    app.request.getJSON(`${app.data['serverIP']}endpoints/web/getAllWeeksPerUser.php?userID=${inspectedUser}&year=${currentYear}&token=${app.data['token']}`, {}, function (response) {
                         if (response.result == 1) {
                             $$('.currYear').html(response.year);
                             let innerHTML = "";
@@ -107,7 +107,7 @@
                 },
 
                 fillUserInfo: function () {
-                    app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUser.php?userID=${inspectedUser}`, {}, function (response) {
+                    app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUser.php?userID=${inspectedUser}&token=${app.data['token']}`, {}, function (response) {
                         if (response.result == 1) {
                             $$('.inspectUserTitle').html(`${response.users[0].firstName} ${response.users[0].lastName} - ${response.users[0].area}`);
                             

@@ -65,10 +65,9 @@
         // Framework7 Component Methods
         methods: {
             fillTable: function () {
-                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUsersPerGroupNew.php?groupID=${inspectedUserGroup}`, {}, function (response) {
+                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUsersPerGroupNew.php?groupID=${inspectedUserGroup}&token=${app.data['token']}`, {}, function (response) {
                     if (response.result == 1) {
                         let innerHTML = "";
-                        console.dir(response)
                         Object.keys(response.users).forEach((key, index) => {
                             let value = response.users[key];
                             innerHTML +=

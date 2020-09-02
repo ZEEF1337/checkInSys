@@ -11,19 +11,51 @@ var app = new Framework7({
   // App root data
   data: function () {
     return {
-      firstname: "Jimmie",
-      lastname: "Andersen",
+      firstname: "",
+      lastname: "",
       userAvatar: "../images/default.png",
-      userID: 6,
+      userID: 0,
       userEmail: "",
-      isAdmin: 1,
-      loggedIn: true,
+      isAdmin: 0,
+      loggedIn: false,
       token: 0,
-      serverIP: "http://192.168.0.200/checkIn/",
+      serverIP: "http://10.11.4.151/endpoint/",
     };
   },
   // App root methods
   methods: {
+    
+    popNavbar: function(){
+      let navbarwidth = $$('#navbar')[0].clientWidth;
+      setTimeout(() => {
+        $$('#view-navbar').css('width', (navbarwidth + "px")).show();
+        $$('#view-home').css('left', (navbarwidth + "px"));
+        if(app.data['isAdmin'] != 0) {
+          $$('#navadminaccordion').show();
+        }
+        $$('.usernamefield').html(app.data['firstname'] +" "+app.data['lastname']);
+        $$('.profilepic').attr('src', app.data['userAvatar']);
+      }, 100);
+      
+      return true;
+    },
+
+    highlightli: function(ID){
+      let navbarheader = $$('#navbar').find('li>a');
+      let navbarsubheader = $$('#navbar').find('li>div>div>a');
+      for(let i = 0; i < navbarheader.length; i++) {
+          if($$(navbarheader[i]).hasClass('active')){
+              $$(navbarheader[i]).removeClass('active');
+          }
+      }
+      for(let i = 0; i < navbarsubheader.length; i++) {
+        if($$(navbarsubheader[i]).hasClass('active')){
+            $$(navbarsubheader[i]).removeClass('active');
+        }
+    }
+
+      $$(`#${ID}`).addClass('active');
+    },
 
     logout: function(){
       app.data['firstname'] = "";
@@ -34,7 +66,7 @@ var app = new Framework7({
       app.data['isAdmin'] = 0;
       app.data['loggedIn'] = false;
       app.data['token'] = 0;
-      $$('#fab-menu').hide();
+      $$('#view-navbar').hide();
     },
 
     statusMsg: function (statusmsg, type, headerclass) {
@@ -114,7 +146,29 @@ var app = new Framework7({
         search(field, tableID, rowCount);
       });
     }, //Slut searchFunction() funktion
-    
+        /**
+     * A function to take a JSON object of keys and values and stores them in the session
+     * @param {Object} sessionObj a JSON Object equal to this format {Key:Value}
+     */
+    setSessionItems: function (sessionObj) {
+      for (prop in sessionObj) {
+        localStorage.setItem(prop, sessionObj[prop]);
+        console.log('Saved login to session!');
+      }
+    },
+
+    /**
+     * Function that gets the session objects and saves a local copy of them
+     */
+    saveSession: function () {
+      app.data['firstname'] = localStorage.getItem('FirstName');
+      app.data['lastname'] = localStorage.getItem('LastName');
+      app.data['userEmail'] = localStorage.getItem('UserEmail');
+      app.data['userID'] = localStorage.getItem('UserID');
+      app.data['isAdmin'] = localStorage.getItem('Admin');
+      app.data['loggedIn'] = localStorage.getItem('LoggedIn');
+      app.data['token'] = localStorage.getItem('Token');
+    },
   },
     // App routes
     routes: routes,
@@ -122,21 +176,18 @@ var app = new Framework7({
         on: {
       pageInit: function (page) {
 
-        //Login Form to show
-        if(app.data['loggedIn'] == false){
-          //document.getElementById('view-navbar').style.display = "none";
-          app.views.main.router.navigate("/login/", {
-            reloadCurrent: true, // Sikrer at der kommer friskt data på siden
-          });
-          return;
-        }
+            //Login Form to show
+            if (!localStorage.getItem('LoggedIn')) {
+              document.getElementById('view-navbar').style.display = "none";
+              app.views.main.router.navigate("/login/", {
+                reloadCurrent: true, // Sikrer at der kommer friskt data på siden
+              });
+              return;
+            } else {
+              app.methods.saveSession();
+            }
 
-        /**
-         * Jeg forstår ikke rigtig hvorfor denne er nødvendig, 
-         * da der på login siden allerede bliver lavet et redirect til currentDay og ikke home
-         */
         // Dette er for at sikre os at den første side der bliver indlæst af systemet, er udlon siden
-        //#BringNibeBack
         let currentpage = app.views.main.router.currentPageEl.dataset.name;
         if (currentpage == "home") {
           app.views.main.router.navigate("/currentDay/", {
@@ -145,7 +196,9 @@ var app = new Framework7({
         };
         },
         pageAfterIn: function (page){
-
+          setTimeout(function () {
+            app.methods.popNavbar();
+          },25);
         }
       },
   });
@@ -156,15 +209,10 @@ var homeView = app.views.create('#view-home', {
   animate: false,
   main: true,
   master: true,
-  reloadDetail:true,
-  reloadPages: true,
-  pushState: true,
-  pushStateOnLoad: false,
-  componentCache: false,
 });
-// // Navbarview som er det view component der håndtere selve navbaren og alt hvad den gør
-// var navbarView = app.views.create('#view-navbar', {
-//   url: '/navbar/',
-//   animate: false,
-//   linksView: homeView,
-// });
+// Navbarview som er det view component der håndtere selve navbaren og alt hvad den gør
+var navbarView = app.views.create('#view-navbar', {
+  url: '/navbar/',
+  animate: false,
+  linksView: homeView,
+});

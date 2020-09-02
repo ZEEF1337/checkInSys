@@ -65,7 +65,7 @@
         // Framework7 Component Methods
         methods: {
             fillTable: function () {
-                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getAllWeeksPerUser.php?userID=${app.data['userID']}&year=${currentYear}`, {}, function (response) {
+                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getAllWeeksPerUser.php?userID=${app.data['userID']}&year=${currentYear}&token=${app.data['token']}`, {}, function (response) {
                     if (response.result == 1) {
                         $$('.currYear').html(response.year);
                         let innerHTML = "";

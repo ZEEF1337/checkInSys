@@ -61,7 +61,7 @@
             },
             dataFetcher() {
                 if (!this.loaded) app.preloader.show('blue');
-                app.request.json(`${app.data['serverIP']}endpoints/web/getUsersPerGroup.php?groupID=${this.$route.params.groupID}`, result => {
+                app.request.json(`${app.data['serverIP']}endpoints/web/getUsersPerGroupNew.php?groupID=${this.$route.params.groupID}&token=${app.data['token']}`, result => {
                     if (result.result == 1) {
                         this.allUsers = result.users;
                     } else {

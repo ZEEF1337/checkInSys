@@ -84,7 +84,7 @@
         // Framework7 Component Methods
         methods: {
             fillTable: function () {
-                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUnknownCardsFiltered.php`, {}, function (response) {
+                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUnknownCardsFiltered.php?token=${app.data['token']}`, {}, function (response) {
                     if (response.result == 1) {
                         let innerHTML = "";
                         Object.keys(response.records).forEach((key, index) => {
@@ -175,8 +175,8 @@
                         app.methods.statusMsg(response.message, "error", ".opretBruger");
                         return;
                     } else {
-                        app.request.json(`${app.data['serverIP']}endpoints/web/migrateCard.php?cardID=${cardID}&userID=${app.data['userID']}`, result => {
-                            app.request.json(`${app.data['serverIP']}endpoints/web/deleteUnknownCard.php?cardID=${cardID}&userID=${app.data['userID']}`, result => {});
+                        app.request.json(`${app.data['serverIP']}endpoints/web/migrateCard.php?cardID=${cardID}&userID=${app.data['userID']}&token=${app.data['token']}`, result => {
+                            app.request.json(`${app.data['serverIP']}endpoints/web/deleteUnknownCard.php?cardID=${cardID}&userID=${app.data['userID']}&token=${app.data['token']}`, result => {});
                         });
                         app.methods.statusMsg(response.message, "success", ".opretBruger");
                         setTimeout(function () { app.views.main.router.navigate("/createuser/", { reloadCurrent: true, }) }, 3000);

@@ -57,7 +57,7 @@
                 </div>
             </li>
             <li class="navright">
-                <a href="/login/" id="navsignout" data-view=".view-main"><span
+                <a href="/login/" id="navsignout" data-view=".view-main" @click="logout"><span
                         class="fas fa-sign-out-alt aicon"></span>Log ud</a>
             </li>
         </ul>
@@ -82,32 +82,22 @@
             toggleChevron(el) {
                 el.toggleClass("fa-chevron-right");
                 el.toggleClass("fa-chevron-down");
-            }
+            },
+            logout() {
+                localStorage.clear();
+            },
         },
         on: {
             //pageMounted trigger når siden bliver indsat i DOMen
             pageMounted: function (page) {
                 const that = this;
-                that.name = (app.data['firstname'] + " " + app.data['lastname']);
-                that.avatar = app.data['userAvatar'];
                 app.on('accordionOpen', function (el) {
                     that.toggleChevron($$(el).find('.dropboi'));
                 });
                 app.on('accordionClose', function (el) {
                     that.toggleChevron($$(el).find('.dropboi'));
                 });
-                if (app.data['isAdmin']) {
-                    $$('#navadminaccordion').show();
-                }
-                $$('.usernamefield').html(that.name);
-                $$('.profilepic').attr('src', that.avatar);
-
-                //Kode til at give den nuværende aktive route "active" klassen
-                //Dette gøres nu dynamisk baseret på det mountede route i main viewet
-                $$('a').filter(function (index, el) {
-                    return ($$(this).attr('href') == `/${app.views.main.router.currentPageEl.dataset.name}/` 
-                            && !$$(this).hasClass('centerlogo'))
-                }).addClass('active');
+                
             }
         },
     }

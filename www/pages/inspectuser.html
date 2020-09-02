@@ -77,7 +77,7 @@
         // Framework7 Component Methods
         methods: {
             fillAccountInformation: function () {
-                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUser.php?userID=${inspectedUser}`, {}, function (response) {
+                app.request.getJSON(`${app.data['serverIP']}endpoints/web/getUser.php?userID=${inspectedUser}&token=${app.data['token']}`, {}, function (response) {
                     if (response.result == 1) {
                         $$('.iu_fname').val(`${response.users[0].firstName}`);
                         $$('.iu_lname').val(`${response.users[0].lastName}`);
